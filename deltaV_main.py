@@ -3,6 +3,7 @@
 
 import pygame as pg
  
+import deltaV_test
 #settings
 WINDOW_WIDTH = 1000
 WINDOW_HIGHT = 800
@@ -17,10 +18,17 @@ gameStage = 0
 
 while gameStage==0:
     #первоначальная настройка
-    
+    pg.init()
+    deltaV_test.testInit()
+    clock = pg.time.Clock()
+
 
     gameStage = 1
 
 while gameStage==1:
-    pass
+    deltaV_test.testMain()
+    clock.tick(30)
 
+
+
+pg.quit
