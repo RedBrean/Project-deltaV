@@ -19,7 +19,7 @@ class Camera():
     def move(self,event):
         if event:
             if event.type==pg.MOUSEBUTTONDOWN and self.flag==False:
-                in_x,in_y=self.x,self.y
+                in_x,in_y=pyautogui.position()
                 self.flag=True
                 x,y = pyautogui.position()
             elif event.type==pg.MOUSEBUTTONUP and self.flag==True:
