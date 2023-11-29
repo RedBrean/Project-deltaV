@@ -4,6 +4,8 @@
 import pygame as pg
  
 import deltaV_test
+
+from deltaV_physics import*
 #settings
 WINDOW_WIDTH = 1000
 WINDOW_HIGHT = 800
