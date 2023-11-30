@@ -7,6 +7,7 @@ gravitational_constant = 6.674e-11
 
 class SpaceObject:
     def __init__(self, x = 0, y : float = 0, vx : float = 0, vy:float = 0, m:float = 0) -> None:
+        print(x)
         self.x = x
         self.y = y
         self.vx = vx

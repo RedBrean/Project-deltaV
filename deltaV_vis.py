@@ -14,13 +14,13 @@ GREY = 0x7D7D7D
 
 class Drawable(object):
     """Рисовабельные предметы"""
-    def __init__(self,type,abs_x,abs_y,scale,color):
-        self.type=type
-        self.abs_x=abs_x
-        self.abs_y=abs_y
-        self.scale=scale
-        self.color=color
-
+    def __init__(self, spriteName = None, x = None, y = None):
+        if(x!=None and y!=None):
+            self.x = x
+            self.y = y
+    def GetSurface(self):
+        surface = pg.Surface()
+        
 class Camera():
     def __init__(self,x=0,y=0):
         self.x=x
@@ -37,7 +37,6 @@ class Camera():
                 self.x-=10
 
         
-
 class ScreenDrawer():
     """Класс отвечающий за вывод на экран"""
     def __init__(self,screen,drawble_objects):
