@@ -1,8 +1,9 @@
 """Тут работа с файлами уровня"""
 from deltaV_library import*
 from deltaV_physics import*
+import deltaV_library
 
-def read_level_from_file(file_name) -> list[GameObject]:
+def read_level_from_file(file_name) -> list:
     """Читает из файла.
     Разделение "; ". 
     0 параметр тип объекта
@@ -17,6 +18,7 @@ def read_level_from_file(file_name) -> list[GameObject]:
             parametrs = line.split("; ")
             object_type = parametrs[0].lower()
             if object_type == "game_object": 
-                new_object = GameObject()
+                new_object =  GameObject()
                 new_object.parse_from_list(parametrs[1:6])
+                objects.append(new_object)
         return objects
