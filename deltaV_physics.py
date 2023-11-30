@@ -5,8 +5,8 @@ from deltaV_vis import*
 gravitational_constant = 6.674e-11
 
 
-class SpaceObject():
-    def __init__(self, x : float = 0, y : float = 0, vx : float = 0, vy:float = 0, m:float = 0) -> None:
+class SpaceObject:
+    def __init__(self, x = 0, y : float = 0, vx : float = 0, vy:float = 0, m:float = 0) -> None:
         self.x = x
         self.y = y
         self.vx = vx
@@ -42,4 +42,7 @@ class PhysicalModulation():
         """Двигает все за время dt"""
         for space_object in self.space_objects:
             space_object.move_by_gravity_of_spaceobjects_list(dt, self.space_objects)
+    def update_by_dt_few_times(self, dt, n):
+        for _ in range(n):
+            self.update_by_dt(dt)
 
