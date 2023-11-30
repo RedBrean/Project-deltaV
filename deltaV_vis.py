@@ -13,7 +13,6 @@ WHITE = 0xFFFFFF
 GREY = 0x7D7D7D
 
 class Drawable(object):
-    list_of_em=[]
     """Рисовабельные предметы"""
     def __init__(self,type,abs_x,abs_y,scale,color):
         self.type=type
@@ -21,7 +20,7 @@ class Drawable(object):
         self.abs_y=abs_y
         self.scale=scale
         self.color=color
-        Drawable.list_of_em.append(self)
+
 class Camera():
     def __init__(self,x=0,y=0):
         self.x=x
@@ -41,11 +40,12 @@ class Camera():
 
 class ScreenDrawer():
     """Класс отвечающий за вывод на экран"""
-    def __init__(self,screen):
+    def __init__(self,screen,drawble_objects):
         self.screen=screen
+        self.drawble_objects=drawble_objects
     def draw(self,cam):
         self.screen.fill(BLACK)
-        for i in Drawable.list_of_em:
+        for i in self.drawble_objects:
             rel_x,rel_y=i.abs_x-cam.x,i.abs_y-cam.y
             if i.type=="circle":
                 pg.draw.circle(self.screen, i.color, (rel_x, rel_y), 50*i.scale)

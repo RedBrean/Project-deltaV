@@ -49,7 +49,7 @@ while gameStage==1:
         else:
             pass
         cam.move(event)
-        drawer.draw(cam)
+        drawer.draw(cam,objects)
     pg.display.update()
     clock.tick(30)
     
