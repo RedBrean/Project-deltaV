@@ -1,5 +1,6 @@
 """Модуль в котором куча  физики"""
 import math
+from deltaV_vis import*
 
 gravitational_constant = 6.674e-11
 
@@ -42,3 +43,4 @@ class PhysicalModulation():
         """Двигает все за время dt"""
         for space_object in self.space_objects:
             space_object.move_by_gravity_of_spaceobjects_list(dt, self.space_objects)
+

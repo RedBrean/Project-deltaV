@@ -5,6 +5,7 @@ import pygame as pg
  
 import deltaV_test
 from deltaV_vis import *
+from deltaV_library import*
 #settings
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 800
@@ -23,6 +24,8 @@ while gameStage==0:
     deltaV_test.testInit()
     clock = pg.time.Clock()
 
+    TestObject = GameObject(100, 1E6, 1E3, 0, 2E6)
+    
 
     gameStage = 1
 
