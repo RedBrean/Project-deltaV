@@ -24,7 +24,6 @@ while gameStage==0:
     deltaV_test.testInit()
     clock = pg.time.Clock()
 
-    TestObject = GameObject(100, 1E6, 1E3, 0, 2E6)
     
 
     gameStage = 1
