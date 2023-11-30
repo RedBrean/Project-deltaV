@@ -1,6 +1,17 @@
 """Здесь все что касается нарисовать что-то на экране"""
 import pygame as pg
 import pyautogui
+
+RED = 0xFF0000
+BLUE = 0x0000FF
+YELLOW = 0xFFC91F
+GREEN = 0x00FF00
+MAGENTA = 0xFF03B8
+CYAN = 0x00FFCC
+BLACK = (0, 0, 0)
+WHITE = 0xFFFFFF
+GREY = 0x7D7D7D
+
 class Drawable(object):
     list_of_em=[]
     """Рисовабельные предметы"""
@@ -33,6 +44,7 @@ class ScreenDrawer():
     def __init__(self,screen):
         self.screen=screen
     def draw(self,cam):
+        self.screen.fill(BLACK)
         for i in Drawable.list_of_em:
             rel_x,rel_y=i.abs_x-cam.x,i.abs_y-cam.y
             if i.type=="circle":

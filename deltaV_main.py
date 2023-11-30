@@ -22,20 +22,16 @@ while gameStage==0:
     #первоначальная настройка
     pg.init()
     deltaV_test.testInit()
-    clock = pg.time.Clock()
-
-    
-
-    gameStage = 1
-
-while gameStage==1:
-    #deltaV_test.testMain()
+    clock = pg.time.Clock() 
     screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     c = Drawable("circle",100,100,1,0xFF0000)
     cam = Camera()
     drawer = ScreenDrawer(screen)
     
-    
+
+    gameStage = 1
+
+while gameStage==1:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameStage="No"
