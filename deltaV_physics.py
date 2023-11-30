@@ -27,13 +27,12 @@ class SpaceObject():
     def __str__(self):
         return f"{self.x}; {self.y}; {self.vx}; {self.vy}; {self.m}"
     
-    def parse_from_str(self, string):
-        paramtetrs = string.split("; ")
-        self.x =  float(paramtetrs[0])
-        self.y =  float(paramtetrs[1])
-        self.vx = float(paramtetrs[2])
-        self.vy = float(paramtetrs[3])
-        self.m =  float(paramtetrs[4])
+    def parse_from_list(self, parametrs):
+        self.x =  float(parametrs[0])
+        self.y =  float(parametrs[1])
+        self.vx = float(parametrs[2])
+        self.vy = float(parametrs[3])
+        self.m =  float(parametrs[4])
 
 class PhysicalModulation():    
     def __init__(self, space_objects:list[SpaceObject]):

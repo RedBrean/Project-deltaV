@@ -7,6 +7,10 @@ class GameObject(SpaceObject, Drawable):
         SpaceObject.__init__(x, y, vx, vy, m)
         Drawable.__init__()
 
+class Player(GameObject):
+    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0) -> None:
+        super().__init__(x, y, vx, vy, m)
+
 
 class Button():
     """Класс кнопки"""
