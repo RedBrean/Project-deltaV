@@ -72,7 +72,14 @@ class Camera():
                 self.x+=10/self.scale
             elif event.key==pg.K_LEFT:
                 self.x-=10/self.scale
-
+    def Scale(self,event):
+        if event.type == pg.MOUSEWHEEL:
+            print(event.y)
+            if event.y >= 1:
+                self.scale*=1.1
+            elif event.y <= -1:
+                self.scale*=0.9
+            
         
 class ScreenDrawer():
     """Класс отвечающий за вывод на экран"""

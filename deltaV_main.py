@@ -48,8 +48,10 @@ while gameStage==1:
             gameStage="No"
         if event.type == pg.KEYDOWN:
             cam.move(event)
+            
         else:
             pass
+        cam.Scale(event)
 
 
     drawer.draw(cam)
