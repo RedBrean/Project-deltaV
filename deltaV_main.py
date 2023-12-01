@@ -26,38 +26,31 @@ gameStage = 0
 while gameStage==0:
     #первоначальная настройка
     pg.init()
-    #deltaV_test.testInit()
+    deltaV_test.testInit()
     clock = pg.time.Clock() 
     screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
     cam = Camera()
+    drawer = ScreenDrawer(screen)
     
-    game_objects = read_level_from_file(file_name)
-    print(f"Успешно прочитал файл. Космических тел: {len(game_objects)}")
+    objects = read_level_from_file(file_name)
     
-    mainPhisMod = PhysicalModulation(game_objects)
-
-    #drawer = ScreenDrawer(screen, objects)
+    mainPhisMod = PhysicalModulation(object)
 
     gameStage = 1
 
 while gameStage==1:
+    
+    mainPhisMod.update_by_dt_few_times(10000, 100)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameStage="No"
         else:
             pass
-        #cam.move(event)
-        #drawer.draw(cam,objects)
-    testPlanet = game_objects[0]
-    if(tick % 50 == 0):
-        print(testPlanet.x, testPlanet.y, testPlanet.vx, testPlanet.vy)
-
-    mainPhisMod.update_by_dt_few_times(1000, 1)
-
+        cam.move(event)
+        drawer.draw(cam)
     pg.display.update()
-    tick+=1
     clock.tick(30)
     
 
