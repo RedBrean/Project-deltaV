@@ -91,10 +91,8 @@ class Camera():
 
     def Scale(self,event):
         if event.type == pg.MOUSEWHEEL:
-            if event.y >= 1:
-                self.scale*=1.1
-            elif event.y <= -1:
-                self.scale*=0.9
+            self.scale*=(1.1**event.y)
+
             
         
 class ScreenDrawer():
