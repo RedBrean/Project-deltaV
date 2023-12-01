@@ -9,11 +9,9 @@ from deltaV_vis import *
 from deltaV_library import*
 from deltaV_input_output import*
 from deltaV_physics import*
+from deltaV_settings import*
 #settings
-WINDOW_WIDTH = 1000
-WINDOW_HEIGHT = 800
 
-file_name = "solar_system.txt"
 
 gameStage = 0
 """Переменная текущего состояния игры. 
@@ -35,7 +33,7 @@ while gameStage==0:
     
     objects = read_level_from_file(file_name)
     drawer = ScreenDrawer(screen,objects)
-    mainPhisMod = PhysicalModulation(object)
+    mainPhisMod = PhysicalModulation(objects)
 
     gameStage = 1
 

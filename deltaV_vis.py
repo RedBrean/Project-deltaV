@@ -1,16 +1,9 @@
 """Здесь все что касается нарисовать что-то на экране"""
 import pygame as pg
+from deltaV_settings import *
 import pyautogui
 
-RED = 0xFF0000
-BLUE = 0x0000FF
-YELLOW = 0xFFC91F
-GREEN = 0x00FF00
-MAGENTA = 0xFF03B8
-CYAN = 0x00FFCC
-BLACK = (0, 0, 0)
-WHITE = 0xFFFFFF
-GREY = 0x7D7D7D
+
 
 class Drawable(object):
     """Рисовабельные предметы"""
@@ -20,21 +13,39 @@ class Drawable(object):
         if(x!=None and y!=None):
             self.x = x
             self.y = y
-    def GetSurface(self,Camera) -> pg.Surface:
+    def GetSurface(self, camera) -> pg.Surface:
         #Долно скидывать полотно которое нужно вывести на экран
-        surf = pg.Surface((Camera.scale*30,Camera.scale*30))
+        surf = pg.Surface((camera.scale*30,camera.scale*30))
         return surf
         pass
-    def GetRect(self, Camera) -> pg.Rect:
+    def GetRect(self, camera) -> pg.Rect:
         #должно понимать где оно должно рисовать
-        self.x =self.x-Camera.x
-        self.y =self.y-Camera.y
+        self.x =self.x-camera.x
+        self.y =self.y-camera.y
         pass
         
 class Camera():
     def __init__(self,x=0,y=0):
         self.x=x
         self.y=y
+        self.scale = 1
+    def set_up_defoult(self, game_objects : list[Drawable]):
+        xs = []
+        ys = []
+        for game_object in game_objects:
+            xs.append(game_object.x)
+            ys.append(game_object.y)
+
+        maxX = max(xs)
+        maxY = max(ys)
+        minX = min(xs)
+        minY = min(ys)
+
+        self.x = (maxX+minX)/2
+        self.y = (maxY+minY)/2
+
+        self.scale = min()
+
     def move(self,event):
         if event.type==pg.KEYDOWN:
             if event.key==pg.K_UP:
@@ -49,16 +60,13 @@ class Camera():
         
 class ScreenDrawer():
     """Класс отвечающий за вывод на экран"""
-    def __init__(self,screen,drawble_objects):
+    def __init__(self,screen : pg.Surface, drawble_objects : list[Drawable]):
         self.screen=screen
         self.drawble_objects=drawble_objects
-    def draw(self,cam):
+    def draw(self, camera):
         #Проходит по всем объектам в списке этого же класса и рисует их
         
         self.screen.fill(BLACK)
-        for i in self.drawble_objects:
-            rel_x,rel_y=i.abs_x-cam.x,i.abs_y-cam.y
-            if i.type=="circle":
-                pg.draw.circle(self.screen, i.color, (rel_x, rel_y), 50*i.scale)
-            
+        for cDrawebleObject in self.drawble_objects:
+            self.screen.blit(cDrawebleObject.GetSurface(camera), cDrawebleObject.GetRect(camera))
             
