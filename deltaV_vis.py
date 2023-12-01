@@ -42,6 +42,8 @@ class Camera():
     def __init__(self,x=0,y=0):
         self.x=x
         self.y=y
+        self.vx=0
+        self.vy=0
         self.scale = 1
     def set_up_defoult(self, game_objects : list[Drawable]):
         xs = []
@@ -63,16 +65,30 @@ class Camera():
 
         print(f"Камера настроена. Параметры: x = {self.x}, y = {self.y}, scale = {self.scale}")
 
-    def move(self,event):
-        if event.type==pg.KEYDOWN:
-            if event.key==pg.K_UP:
-                self.y-=10/self.scale
-            elif event.key==pg.K_DOWN:
-                self.y+=10/self.scale
-            elif event.key==pg.K_RIGHT:
-                self.x+=10/self.scale
-            elif event.key==pg.K_LEFT:
-                self.x-=10/self.scale
+    def move(self):
+        self.x+=self.vx/self.scale
+        self.y+=self.vy/self.scale
+    def move_by_key(self,event):
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_RIGHT:
+                self.vx=10
+            elif event.key == pg.K_LEFT:
+                self.vx=-10
+            elif event.key == pg.K_UP:
+                self.vy=-10
+            elif event.key == pg.K_DOWN:
+                self.vy=10
+        elif event.type == pg.KEYUP:
+            if event.key == pg.K_RIGHT:
+                self.vx=0
+            elif event.key == pg.K_LEFT:
+                self.vx=0
+            elif event.key == pg.K_UP:
+                self.vy=0
+            elif event.key == pg.K_DOWN:
+                self.vy=0
+
+
     def Scale(self,event):
         if event.type == pg.MOUSEWHEEL:
             if event.y >= 1:
