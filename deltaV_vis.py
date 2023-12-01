@@ -74,7 +74,6 @@ class Camera():
                 self.x-=10/self.scale
     def Scale(self,event):
         if event.type == pg.MOUSEWHEEL:
-            print(event.y)
             if event.y >= 1:
                 self.scale*=1.1
             elif event.y <= -1:
