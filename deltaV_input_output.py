@@ -19,6 +19,6 @@ def read_level_from_file(file_name) -> list:
             object_type = parametrs[0].lower()
             if object_type == "game_object": 
                 new_object =  GameObject()
-                new_object.parse_from_list(parametrs[1:7])
+                new_object.parse_from_list(parametrs[1:])
                 objects.append(new_object)
         return objects
