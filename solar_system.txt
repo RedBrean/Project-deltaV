@@ -5,7 +5,7 @@ game_object; 0; 0; 0; 0; 1.98892E30; 6.957E8; color white
 game_object; 57.909E9; 0; 0; 47.87E3; 3.302E23; 2.4397e6; color red
 
 # Венера
-game_object; 108.21E9; 0; 0; 35.02E3; 4.869E24; 6.0518e6; color cian
+game_object; 108.21E9; 0; 0; 35.02E3; 4.869E24; 6.0518e6; color cyan
 
 # Земля
 game_object; 149.60E9; 0; 0; 29.76E3; 5.974E24; 6.371e6; color green

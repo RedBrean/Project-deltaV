@@ -41,7 +41,7 @@ while gameStage==0:
 
 while gameStage==1:
     
-    mainPhisMod.update_by_dt_few_times(100, 1000)
+    mainPhisMod.update_by_dt_few_times(100, 100)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -57,7 +57,7 @@ while gameStage==1:
 
     drawer.draw(cam)
     pg.display.update()
-    clock.tick(30)
+    clock.tick(60)
     
 
 

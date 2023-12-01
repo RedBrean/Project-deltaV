@@ -9,7 +9,7 @@ class GameObject(SpaceObject, Drawable):
         SpaceObject.__init__(self, x, y, vx, vy, m)
         self.color = WHITE
     def GetSurface(self, camera) -> pg.Surface:
-        R = max(3, self.collisionR * camera.scale)
+        R = max(3, 3*self.collisionR * camera.scale)
         width  = 3*R
         hight = 3*R
         surf = pg.Surface((width,hight))
