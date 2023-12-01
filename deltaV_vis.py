@@ -9,20 +9,34 @@ class Drawable(object):
     """Рисовабельные предметы"""
     def __init__(self, spriteFileName = None, x = None, y = None):
         #можно читать из файла проекта спрайт
-        pg.image.load(spriteFileName)
+        self.haveSprite = False
+        if(spriteFileName != None):
+            self.sprite = pg.image.load(spriteFileName)
+            self.haveSprite = True
         if(x!=None and y!=None):
             self.x = x
             self.y = y
+
     def GetSurface(self, camera) -> pg.Surface:
         #Долно скидывать полотно которое нужно вывести на экран
-        surf = pg.Surface((camera.scale*30,camera.scale*30))
+        #Пока что тут затычка
+        width  = 30
+        hight = 30
+        surf = pg.Surface((width,hight))
+        surf.fill(BLACK)
+        pg.draw.circle(surf, RED, (width/2, hight/2), 10)
+        surf.set_alpha(BLACK)
+        surf.convert_alpha()
         return surf
-        pass
+        
     def GetRect(self, camera) -> pg.Rect:
         #должно понимать где оно должно рисовать
-        self.x =self.x-camera.x
-        self.y =self.y-camera.y
-        pass
+        x = (self.x-camera.x)*camera.scale
+        y = (self.y-camera.y)*camera.scale
+        #FIXME Сейчас прямоугольник всегда 50 на 50
+        rect = pg.Rect((0, 0), (50,50))
+        rect.center = (x,y)
+        return rect
         
 class Camera():
     def __init__(self,x=0,y=0):
