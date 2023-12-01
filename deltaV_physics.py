@@ -21,8 +21,8 @@ class SpaceObject:
                 continue
             Alpha = math.atan2(spaceObject.y - self.y, spaceObject.x - self.x)
             dV = dt*(gravitational_constant * spaceObject.m / ((spaceObject.x - self.x)**2 + (spaceObject.y - self.y)**2))
-            self.vx += dV * math.sin(Alpha)
-            self.vy += dV * math.cos(Alpha)
+            self.vx += dV * math.cos(Alpha)
+            self.vy += dV * math.sin(Alpha)
             if(tick % 500 == 0):
                 pass
                 #print(f"A:{Alpha}, dv = {dV}")
