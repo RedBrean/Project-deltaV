@@ -16,14 +16,19 @@ class Drawable(object):
     """Рисовабельные предметы"""
     def __init__(self, spriteFileName = None, x = None, y = None):
         #можно читать из файла проекта спрайт
+        pg.image.load(spriteFileName)
         if(x!=None and y!=None):
             self.x = x
             self.y = y
-    def GetSurface(self) -> pg.Surface:
+    def GetSurface(self,Camera) -> pg.Surface:
         #Долно скидывать полотно которое нужно вывести на экран
+        surf = pg.Surface((Camera.scale*30,Camera.scale*30))
+        return surf
         pass
     def GetRect(self, Camera) -> pg.Rect:
         #должно понимать где оно должно рисовать
+        self.x =self.x-Camera.x
+        self.y =self.y-Camera.y
         pass
         
 class Camera():
@@ -49,6 +54,7 @@ class ScreenDrawer():
         self.drawble_objects=drawble_objects
     def draw(self,cam):
         #Проходит по всем объектам в списке этого же класса и рисует их
+        
         self.screen.fill(BLACK)
         for i in self.drawble_objects:
             rel_x,rel_y=i.abs_x-cam.x,i.abs_y-cam.y
