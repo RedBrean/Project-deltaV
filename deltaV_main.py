@@ -46,13 +46,14 @@ while gameStage==1:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameStage="No"
-        if event.type == pg.KEYDOWN:
-            cam.move(event)
-            
+        elif event.type == pg.KEYDOWN:
+            cam.move_by_key(event)
+        elif event.type == pg.KEYUP:
+            cam.move_by_key(event)
         else:
             pass
         cam.Scale(event)
-
+    cam.move()
 
     drawer.draw(cam)
     pg.display.update()
