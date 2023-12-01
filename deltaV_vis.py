@@ -1,9 +1,6 @@
 """Здесь все что касается нарисовать что-то на экране"""
 import pygame as pg
 from deltaV_settings import *
-import pyautogui
-
-
 
 class Drawable(object):
     """Рисовабельные предметы"""
@@ -25,7 +22,7 @@ class Drawable(object):
         surf = pg.Surface((width,hight))
         surf.fill(BLACK)
         surf.set_colorkey(BLACK)
-        pg.draw.circle(surf, RED, (width/2, hight/2), 10)
+        pg.draw.circle(surf, (255, 0, 255), (width/2, hight/2), 10)
         surf = surf.convert_alpha()
         return surf
         
