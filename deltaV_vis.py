@@ -37,11 +37,36 @@ class Drawable(object):
         
 class Camera():
     def __init__(self,x=0,y=0):
+        self.pivotx = 0
+        self.pivoty = 0
+
+        self.relx = 0
+        self.rely = 0
+
         self.x=x
         self.y=y
+
         self.vx=0
         self.vy=0
         self.scale = 1
+
+        self.has_pivot = False
+        self.pivot_object = None
+
+    @property
+    def x(self):
+        return self.relx + self.pivotx
+    @property
+    def y(self):
+        return self.rely + self.pivoty
+    @x.setter
+    def x(self, value):
+        self.relx += value - self.x
+    @y.setter
+    def y(self, value):
+        self.rely += value - self.y
+    
+
     def set_up_defoult(self, game_objects : list[Drawable]):
         xs = []
         ys = []
@@ -60,11 +85,23 @@ class Camera():
         dY = max((maxY - minY), 1000)
         self.scale = 0.9*min(WINDOW_WIDTH/dX,WINDOW_HEIGHT/dY)
 
-        print(f"Камера настроена. Параметры: x = {self.x}, y = {self.y}, scale = {self.scale}")
+        self.has_pivot = False
 
-    def move(self):
-        self.x+=self.vx/self.scale
-        self.y+=self.vy/self.scale
+    def Update(self):
+        self.relx+=self.vx/self.scale
+        self.rely+=self.vy/self.scale
+
+        if(self.has_pivot):
+            self.pivotx = self.pivot_object.x
+            self.pivoty = self.pivot_object.y
+
+    def SetPivot(self, pivotObject):
+        self.pivot_object = pivotObject
+        self.has_pivot = True
+        self.relx = 0
+        self.rely = 0
+
+
     def move_by_key(self,event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_RIGHT:

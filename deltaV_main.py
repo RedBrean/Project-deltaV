@@ -37,6 +37,8 @@ while gameStage==0:
 
     mainPhisMod = PhysicalModulation(objects)
 
+    cam.SetPivot(objects[3])
+
     gameStage = 1
 
 while gameStage==1:
@@ -53,7 +55,7 @@ while gameStage==1:
         else:
             pass
         cam.Scale(event)
-    cam.move()
+    cam.Update()
 
     drawer.draw(cam)
     pg.display.update()
