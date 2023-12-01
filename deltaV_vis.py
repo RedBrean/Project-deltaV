@@ -22,6 +22,7 @@ class Drawable(object):
         #должно понимать где оно должно рисовать
         self.x =self.x-camera.x
         self.y =self.y-camera.y
+
         pass
         
 class Camera():
@@ -44,7 +45,7 @@ class Camera():
         self.x = (maxX+minX)/2
         self.y = (maxY+minY)/2
 
-        self.scale = min()
+        self.scale = 0.9*min(WINDOW_WIDTH/(maxX-minX),WINDOW_HEIGHT/(maxY-minY))
 
     def move(self,event):
         if event.type==pg.KEYDOWN:
