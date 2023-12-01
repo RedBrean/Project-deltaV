@@ -31,10 +31,10 @@ while gameStage==0:
     screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
     cam = Camera()
-    drawer = ScreenDrawer(screen)
+    
     
     objects = read_level_from_file(file_name)
-    
+    drawer = ScreenDrawer(screen,objects)
     mainPhisMod = PhysicalModulation(object)
 
     gameStage = 1
