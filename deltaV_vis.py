@@ -25,7 +25,7 @@ class Drawable(object):
         surf = pg.Surface((width,hight))
         surf.fill(BLACK)
         pg.draw.circle(surf, RED, (width/2, hight/2), 10)
-        surf.convert_alpha()
+        surf = surf.convert_alpha()
         return surf
         
     def GetRect(self, camera) -> pg.Rect:

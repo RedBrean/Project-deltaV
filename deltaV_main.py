@@ -41,7 +41,7 @@ while gameStage==0:
 
 while gameStage==1:
     
-    mainPhisMod.update_by_dt_few_times(10000, 100)
+    mainPhisMod.update_by_dt_few_times(1000, 10)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:

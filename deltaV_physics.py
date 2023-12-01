@@ -19,8 +19,7 @@ class SpaceObject:
             if (self.x == spaceObject.x and self.y == spaceObject.y):
                 continue
             Alpha = math.atan2(spaceObject.y - self.y, spaceObject.x - self.x)
-            dV = dt*(gravitational_constant * spaceObject.m
-                            / ((spaceObject.x - self.x)**2 + (spaceObject.y - self.y)**2))
+            dV = dt*(gravitational_constant * spaceObject.m / ((spaceObject.x - self.x)**2 + (spaceObject.y - self.y)**2))
             self.vx += -dV * math.sin(Alpha)
             self.vy += -dV * math.cos(Alpha)
             if(tick % 500 == 0):
@@ -52,7 +51,7 @@ class PhysicalModulation():
         """Двигает все за время dt"""
         for space_object in self.space_objects:
             space_object.move_by_gravity_of_spaceobjects_list(dt, self.space_objects)
-            #space_object.move(dt)
+            space_object.move(dt)
 
     def update_by_dt_few_times(self, dt, n):
         for _ in range(n):
