@@ -25,14 +25,13 @@ class Drawable(object):
         surf = pg.Surface((width,hight))
         surf.fill(BLACK)
         pg.draw.circle(surf, RED, (width/2, hight/2), 10)
-        surf.set_alpha(BLACK)
         surf.convert_alpha()
         return surf
         
     def GetRect(self, camera) -> pg.Rect:
         #должно понимать где оно должно рисовать
-        x = (self.x-camera.x)*camera.scale
-        y = (self.y-camera.y)*camera.scale
+        x = (self.x-camera.x)*camera.scale + WINDOW_WIDTH/2
+        y = (self.y-camera.y)*camera.scale + WINDOW_HEIGHT/2
         #FIXME Сейчас прямоугольник всегда 50 на 50
         rect = pg.Rect((0, 0), (50,50))
         rect.center = (x,y)
@@ -57,19 +56,22 @@ class Camera():
 
         self.x = (maxX+minX)/2
         self.y = (maxY+minY)/2
+        dX = max((maxX - minX), 1000)
+        dY = max((maxY - minY), 1000)
+        self.scale = 0.9*min(WINDOW_WIDTH/dX,WINDOW_HEIGHT/dY)
 
-        self.scale = 0.9*min(WINDOW_WIDTH/(maxX-minX),WINDOW_HEIGHT/(maxY-minY))
+        print(f"Камера настроена. Параметры: x = {self.x}, y = {self.y}, scale = {self.scale}")
 
     def move(self,event):
         if event.type==pg.KEYDOWN:
             if event.key==pg.K_UP:
-                self.y-=10
+                self.y-=10/self.scale
             elif event.key==pg.K_DOWN:
-                self.y+=10
+                self.y+=10/self.scale
             elif event.key==pg.K_RIGHT:
-                self.x+=10
+                self.x+=10/self.scale
             elif event.key==pg.K_LEFT:
-                self.x-=10
+                self.x-=10/self.scale
 
         
 class ScreenDrawer():

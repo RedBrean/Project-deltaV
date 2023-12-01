@@ -52,7 +52,7 @@ class PhysicalModulation():
         """Двигает все за время dt"""
         for space_object in self.space_objects:
             space_object.move_by_gravity_of_spaceobjects_list(dt, self.space_objects)
-            space_object.move(dt)
+            #space_object.move(dt)
 
     def update_by_dt_few_times(self, dt, n):
         for _ in range(n):

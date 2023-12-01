@@ -27,12 +27,14 @@ while gameStage==0:
     deltaV_test.testInit()
     clock = pg.time.Clock() 
     screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-
-    cam = Camera()
-    
+   
     
     objects = read_level_from_file(file_name)
     drawer = ScreenDrawer(screen,objects)
+
+    cam = Camera()
+    cam.set_up_defoult(objects)
+
     mainPhisMod = PhysicalModulation(objects)
 
     gameStage = 1
@@ -44,10 +46,13 @@ while gameStage==1:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameStage="No"
+        if event.type == pg.KEYDOWN:
+            cam.move(event)
         else:
             pass
-        cam.move(event)
-        drawer.draw(cam)
+
+
+    drawer.draw(cam)
     pg.display.update()
     clock.tick(30)
     
