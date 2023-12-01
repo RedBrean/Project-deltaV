@@ -16,3 +16,24 @@ GREY = 0x7D7D7D
 def color_from_str(string:str):
     if(string.lower() == "red"):
         return RED
+    elif(string.lower() == "blue"):
+        return BLUE
+    elif(string.lower() == "yellow"):
+        return YELLOW
+    elif(string.lower() == "green"):
+        return GREEN
+    elif(string.lower() == "magenta"):
+        return MAGENTA
+    elif(string.lower() == "cyan"):
+        return CYAN
+    elif(string.lower() == "black"):
+        return BLACK
+    elif(string.lower() == "white"):
+        return WHITE
+    elif(string.lower() == "grey"):
+        return GREY
+    else:
+        print("no color recognised")
+        return WHITE
+    
+    
