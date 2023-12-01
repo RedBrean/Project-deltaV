@@ -6,12 +6,13 @@ gravitational_constant = 6.674e-11
 
 
 class SpaceObject:
-    def __init__(self, x = 0, y : float = 0, vx : float = 0, vy:float = 0, m:float = 0) -> None:
+    def __init__(self, x = 0, y : float = 0, vx : float = 0, vy:float = 0, m:float = 0, collisionR : float = 0) -> None:
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
         self.m = m
+        self.collisionR = collisionR 
 
     def move_by_gravity_of_spaceobjects_list(self, dt, AnotherSpaceObjects:list):
         """Изменяет скорость космического тела гравитацией других тел за время dt"""
@@ -20,8 +21,8 @@ class SpaceObject:
                 continue
             Alpha = math.atan2(spaceObject.y - self.y, spaceObject.x - self.x)
             dV = dt*(gravitational_constant * spaceObject.m / ((spaceObject.x - self.x)**2 + (spaceObject.y - self.y)**2))
-            self.vx += -dV * math.sin(Alpha)
-            self.vy += -dV * math.cos(Alpha)
+            self.vx += dV * math.sin(Alpha)
+            self.vy += dV * math.cos(Alpha)
             if(tick % 500 == 0):
                 pass
                 #print(f"A:{Alpha}, dv = {dV}")
@@ -41,6 +42,7 @@ class SpaceObject:
         self.vx = float(parametrs[2])
         self.vy = float(parametrs[3])
         self.m =  float(parametrs[4])
+        self.collisionR = float(parametrs[5])
         print(f"Result = {self}")
 
 class PhysicalModulation():    

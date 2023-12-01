@@ -24,6 +24,7 @@ class Drawable(object):
         hight = 30
         surf = pg.Surface((width,hight))
         surf.fill(BLACK)
+        surf.set_colorkey(BLACK)
         pg.draw.circle(surf, RED, (width/2, hight/2), 10)
         surf = surf.convert_alpha()
         return surf
