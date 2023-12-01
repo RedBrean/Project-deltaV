@@ -12,3 +12,7 @@ CYAN = 0x00FFCC
 BLACK = (0, 0, 0)
 WHITE = 0xFFFFFF
 GREY = 0x7D7D7D
+
+def color_from_str(string:str):
+    if(string.lower() == "red"):
+        return RED
