@@ -1,7 +1,9 @@
 """модуль в котором класссы всякой мелочевки"""
 import pygame as pg
+import copy
 from deltaV_vis import*
 from deltaV_physics import*
+from deltaV_settings import*
 
 
 class GameObject(SpaceObject, Drawable):
@@ -9,7 +11,7 @@ class GameObject(SpaceObject, Drawable):
         SpaceObject.__init__(self, x, y, vx, vy, m)
         self.color = WHITE
     def GetSurface(self, camera) -> pg.Surface:
-        R = max(3, 3*self.collisionR * camera.scale)
+        R = max(3, self.collisionR * camera.scale)
         width  = 3*R
         hight = 3*R
         surf = pg.Surface((width,hight))
@@ -27,6 +29,28 @@ class GameObject(SpaceObject, Drawable):
         except:
             print("Что-то неладное в настройках отображения")
     
+
+class Trajectory(Drawable):
+    def __init__(self, space_objects : list[SpaceObject], main_object : SpaceObject, reletive_object : SpaceObject = None):
+        self.space_objects = copy.deepcopy(space_objects)
+        self.phys_sim = PhysicalModulation(space_objects)
+
+        #FIXME как хранить основные объекты?.. 
+
+        self.trajectory_list = []
+        pass
+
+    def Update(self):
+        #FIXME настройки и логика обновления пока сложны
+        for _ in range(10000):
+
+            self.trajectory_list.append
+    
+    def GetSurface(self, camera) -> pg.Surface:
+        pass
+    
+    def GetRect(self, camera) -> pg.Rect:
+        pass
 
 class Player(GameObject):
     def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0) -> None:
