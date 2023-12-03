@@ -31,7 +31,7 @@ class Drawable(object):
         x = (self.x-camera.x)*camera.scale + WINDOW_WIDTH/2
         y = (self.y-camera.y)*camera.scale + WINDOW_HEIGHT/2
         #FIXME Сейчас прямоугольник всегда 50 на 50
-        rect = pg.Rect((0, 0), (50,50))
+        rect = self.GetSurface(camera).get_rect()
         rect.center = (x,y)
         return rect
         
@@ -134,10 +134,25 @@ class ScreenDrawer():
     def __init__(self,screen : pg.Surface, drawble_objects : list[Drawable]):
         self.screen=screen
         self.drawble_objects=drawble_objects
-    def draw(self, camera):
+    
+    def draw(self, camera : Camera):
         #Проходит по всем объектам в списке этого же класса и рисует их
-        
         self.screen.fill(BLACK)
+        maxX = camera.x + WINDOW_WIDTH / camera.scale / 2
+        minX = camera.x - WINDOW_WIDTH / camera.scale / 2
+        maxY = camera.y + WINDOW_WIDTH / camera.scale / 2
+        minY = camera.y - WINDOW_WIDTH / camera.scale / 2
+
         for cDrawebleObject in self.drawble_objects:
-            self.screen.blit(cDrawebleObject.GetSurface(camera), cDrawebleObject.GetRect(camera))
+            #FIXME тут костыль с collisionR
+            try:            
+                if(minX < cDrawebleObject.x + cDrawebleObject.collisionR
+                    and cDrawebleObject.x - cDrawebleObject.collisionR < maxX 
+                    and minY < cDrawebleObject.y + cDrawebleObject.collisionR
+                    and cDrawebleObject.y - cDrawebleObject.collisionR < maxY):
+                    self.screen.blit(cDrawebleObject.GetSurface(camera), cDrawebleObject.GetRect(camera))
+            except:
+                if(minX < cDrawebleObject.x < maxX and minY < cDrawebleObject.y < maxY):
+                    self.screen.blit(cDrawebleObject.GetSurface(camera), cDrawebleObject.GetRect(camera))
+
             

@@ -1,6 +1,7 @@
 """Модуль в котором куча  физики"""
 import math
 from deltaV_vis import*
+import copy
 tick = 0
 gravitational_constant = 6.674e-11
 
@@ -47,8 +48,11 @@ class SpaceObject:
         print(f"Result = {self}")
 
 class PhysicalModulation():    
-    def __init__(self, space_objects : list[SpaceObject], copy = False):
-        self.space_objects = space_objects
+    def __init__(self, space_objects : list[SpaceObject], copy_objects : bool = False):
+        if not copy_objects:
+            self.space_objects = space_objects
+        else:
+            self.space_objects = copy.deepcopy(space_objects)
         
     def update_by_dt(self, dt):
         """Двигает все за время dt"""

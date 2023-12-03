@@ -37,7 +37,7 @@ while gameStage==0:
 
     mainPhisMod = PhysicalModulation(objects)
 
-    cam.SetPivot(objects[3])
+    #cam.SetPivot(objects[3])
 
     gameStage = 1
 
