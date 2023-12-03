@@ -50,6 +50,8 @@ while gameStage==1:
             gameStage="No"
         elif event.type == pg.KEYDOWN:
             cam.move_by_key(event)
+        elif event.type == pg.MOUSEBUTTONDOWN:
+            button.try_pressing(event)
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
         else:
