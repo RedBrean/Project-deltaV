@@ -37,36 +37,56 @@ while gameStage==0:
 
     mainPhisMod = PhysicalModulation(objects)
 
-    trajectory = Trajectory(objects, objects[3], objects[1], dt = 3000)
+    trajectory = Trajectory(objects, objects[3], objects[4], dt = 10000, Tsim=3*365*24*3600)
 
     drawer.append_object(trajectory)
+    buttons = Buttons()
+    for cObject in objects:
+        rect = pg.rect.Rect((0,0), (30, 30))
+        rect.center = (0, 0)
+        button = Button(rect, cam.SetPivot, cObject, cam, host_object=cObject)
 
+        buttons.append(button)
+
+
+    for cObject in objects:
+        rect = pg.rect.Rect((0,0), (30, 30))
+        rect.center = (0, 0)
+        button = Button(rect, trajectory.change_reletive_object, cObject, cam, mouse_button=3, host_object=cObject)
+
+        buttons.append(button)
+    
     gameStage = 1
 
-while gameStage==1:
-    
-    mainPhisMod.update_by_dt_few_times(100, 10)
 
+while gameStage==1: 
+    
+    mainPhisMod.update_by_dt_few_times(100, 100)
+    
+    buttons.update()
+    
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameStage="No"
         elif event.type == pg.KEYDOWN:
             cam.move_by_key(event)
+            if event.key == pg.K_TAB:
+                cam.has_pivot = False
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
+        elif event.type == pg.MOUSEBUTTONDOWN:
+            buttons.try_pressing(event)
         else:
             pass
         cam.Scale(event)
+    
     cam.Update()
 
-    trajectory.Update(4)
-
-
-
+    trajectory.Update(0.1)
 
     drawer.draw(cam)
     pg.display.update()
-    clock.tick(60)
+    clock.tick(150)
     
 
 

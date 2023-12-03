@@ -41,14 +41,14 @@ class Trajectory(Drawable):
         dt - время шага расчета
         reolution - количество точек траектории
         Tsim - время симуляции"""
-        self.__index_main_object = space_objects.index(main_object)
-        self.__index_reletive_object = space_objects.index(reletive_object)
+        self.index_main_object = space_objects.index(main_object)
+        self.index_reletive_object = space_objects.index(reletive_object)
 
         self.space_objects = space_objects
         self.my_space_objects = copy.deepcopy(space_objects)
-        self.my_main_object = self.my_space_objects[self.__index_main_object]
+        self.my_main_object = self.my_space_objects[self.index_main_object]
         self.reletive_object = reletive_object
-        self.my_reletive_object = self.my_space_objects[self.__index_reletive_object]
+        self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
 
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
@@ -71,7 +71,7 @@ class Trajectory(Drawable):
     def Update(self, resolution_ticks):
         #FIXME настройки и логика обновления пока сложны
         update_times = math.floor(self.Tsim/self.resolution/self.dt)
-        for _ in range(resolution_ticks):
+        for _ in range(math.ceil(resolution_ticks)):
             self.phys_sim.update_by_dt_few_times(self.dt, update_times)
             x = self.my_main_object.x - self.my_reletive_object.x
             y = self.my_main_object.y - self.my_reletive_object.y
@@ -85,16 +85,19 @@ class Trajectory(Drawable):
 
 
     def Restart_sim(self):
-            self.new_trajectory_list.clear()
-            self.calc_time = 0
-            self.my_space_objects = copy.deepcopy(self.space_objects)
-            self.my_main_object = self.my_space_objects[self.__index_main_object]
-            self.my_reletive_object = self.my_space_objects[self.__index_reletive_object]
-            self.phys_sim = PhysicalModulation(self.my_space_objects, False)
+        self.new_trajectory_list.clear()
+        self.calc_time = 0
+        self.my_space_objects = copy.deepcopy(self.space_objects)
+        self.my_main_object = self.my_space_objects[self.index_main_object]
+        self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
+        self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
     def GetSurface(self, camera) -> pg.Surface:
         if(len(self.trajectory_list) == 0):
-            return pg.Surface((10, 10))
+            surf = pg.Surface((10, 10))
+            surf.set_colorkey(BLACK)
+            surf.convert_alpha()
+            return surf
 
         points = []
 
@@ -117,8 +120,8 @@ class Trajectory(Drawable):
             if(point[1] < minY):
                 minY = point[1]
 
-        width = max(1.2*math.ceil(maxX - minX), 1)
-        hight = max(1.2*math.ceil(maxY - minY), 1)
+        width = max(2*math.ceil(maxX - minX), 1)
+        hight = max(2*math.ceil(maxY - minY), 1)
 
         points = list(map(lambda p: (p[0] + width/2, p[1] + hight/2), points))
         
@@ -130,36 +133,70 @@ class Trajectory(Drawable):
         
         surface.convert_alpha()
 
-        end_time = time.time()
-
         return surface
 
+    def change_main_object(self, new_main_object):
+        self.index_main_object = self.space_objects.index(new_main_object)
+        self.Restart_sim()
+        self.trajectory_list.clear()
 
+    
+    def change_reletive_object(self, new_rel_object):
+        self.reletive_object = new_rel_object
+        self.index_reletive_object = self.space_objects.index(new_rel_object)
+        self.Restart_sim()
+        self.trajectory_list.clear()
 
 class Player(GameObject):
     def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0) -> None:
         super().__init__(x, y, vx, vy, m)
     
+class Buttons():
+    """Класс множества кнопок"""
+    def __init__(self):
+        self.buttons : list[Button] = []
+    
+    def append(self, button):
+        self.buttons.append(button)
+
+    def try_pressing(self, event):
+        for cButton in self.buttons:
+            cButton.try_pressing(event)
+    
+    def update(self):
+        for cButton in self.buttons:
+            cButton.update()
 
 class Button():
     """Класс кнопки"""
-    def __init__(self,rect,action,host_object):
+    def __init__(self, rect : pg.rect.Rect, action, arg = None, camera: Camera = None, mouse_button = 1,host_object : Drawable = None):
         self.action = action
         self.rect = rect
         self.host_object = host_object
-        self.width = rect.width
-        self.height = rect.height
+        self.mouse_button = mouse_button
+        self.camera = camera
+        self.arg = arg
+
+        self.__has_host = not(host_object == None or camera == None)
+        if(self.__has_host):
+            self.x_rel = self.rect.centerx
+            self.y_rel = self.rect.centery
+
+            self.y0 = host_object.y
+
+
+    
     def try_pressing(self,event):
-        if event.button == 1:
-            if (event.pos[0]<self.rect.bottomright[0]):
-                if (event.pos[1]<self.rect.bottomright[1]):
-                    if (event.pos[0]>self.rect.topleft[0]):
-                        if (event.pos[1]<self.rect.topleft[1]):
-                            self.action()
+        if event.button == self.mouse_button:
+            if (self.rect.contains(event.pos, (1, 1))):
+                if(self.arg == None):
+                    self.action()
+                else:
+                    self.action(self.arg)
+                
     def update(self):
-        self.rect.topleft[0] = self.host_object.x-self.width/2
-        self.rect.topleft[1] = self.host_object.y-self.height/2
-        self.rect.bottomright[0] = self.rect.topleft[0]+self.width
-        self.rect.bottomright[1] = self.rect.topleft[1]+self.height
+        if(self.__has_host):
+            host_coord = self.camera.get_screen_coord(self.host_object) 
+            self.rect.center = (host_coord[0]+self.x_rel, host_coord[1]+self.y_rel)
 
 

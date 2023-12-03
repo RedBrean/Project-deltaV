@@ -81,6 +81,10 @@ class Camera():
     @y.setter
     def y(self, value):
         self.rely += value - self.y
+
+    def get_screen_coord(self, draweble_object : Drawable):
+        return((draweble_object.x - self.x)*self.scale + WINDOW_WIDTH//2, 
+               (draweble_object.y - self.y)*self.scale + WINDOW_HEIGHT//2)
     
 
     def set_up_defoult(self, game_objects : list[Drawable]):
