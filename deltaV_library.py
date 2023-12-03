@@ -59,9 +59,12 @@ class Player(GameObject):
 
 class Button():
     """Класс кнопки"""
-    def __init__(self,rect,action):
+    def __init__(self,rect,action,host_object):
         self.action = action
         self.rect = rect
+        self.host_object = host_object
+        self.width = rect.width
+        self.height = rect.height
     def try_pressing(self,event):
         if event.button == 1:
             if (event.pos[0]<self.rect.bottomright[0]):
@@ -69,5 +72,10 @@ class Button():
                     if (event.pos[0]>self.rect.topleft[0]):
                         if (event.pos[1]<self.rect.topleft[1]):
                             self.action()
+    def update(self):
+        self.rect.topleft[0] = self.host_object.x-self.width/2
+        self.rect.topleft[1] = self.host_object.y-self.height/2
+        self.rect.bottomright[0] = self.rect.topleft[0]+self.width
+        self.rect.bottomright[1] = self.rect.topleft[1]+self.height
 
 
