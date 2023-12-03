@@ -26,7 +26,7 @@ while gameStage==0:
     pg.init()
     deltaV_test.testInit()
     clock = pg.time.Clock() 
-    screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT)) 
    
     
     objects = read_level_from_file(file_name)
@@ -37,13 +37,15 @@ while gameStage==0:
 
     mainPhisMod = PhysicalModulation(objects)
 
-    #cam.SetPivot(objects[3])
+    trajectory = Trajectory(objects, objects[3], objects[1], dt = 3000)
+
+    drawer.append_object(trajectory)
 
     gameStage = 1
 
 while gameStage==1:
     
-    mainPhisMod.update_by_dt_few_times(100, 100)
+    mainPhisMod.update_by_dt_few_times(100, 10)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -56,6 +58,11 @@ while gameStage==1:
             pass
         cam.Scale(event)
     cam.Update()
+
+    trajectory.Update(4)
+
+
+
 
     drawer.draw(cam)
     pg.display.update()

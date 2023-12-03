@@ -1,6 +1,7 @@
 """Здесь все что касается нарисовать что-то на экране"""
 import pygame as pg
 from deltaV_settings import *
+import copy
 
 class Drawable(object):
     """Рисовабельные предметы"""
@@ -27,6 +28,7 @@ class Drawable(object):
         return surf
         
     def GetRect(self, camera) -> pg.Rect:
+        """Плохой метод, не оптимизирован"""
         #должно понимать где оно должно рисовать
         x = (self.x-camera.x)*camera.scale + WINDOW_WIDTH/2
         y = (self.y-camera.y)*camera.scale + WINDOW_HEIGHT/2
@@ -34,6 +36,20 @@ class Drawable(object):
         rect = self.GetSurface(camera).get_rect()
         rect.center = (x,y)
         return rect
+    
+    def GetRectWihtSurf(self, surface : pg.Surface, camera):
+        #должно понимать где оно должно рисовать
+        x = (self.x-camera.x)*camera.scale + WINDOW_WIDTH/2
+        y = (self.y-camera.y)*camera.scale + WINDOW_HEIGHT/2
+        #FIXME Сейчас прямоугольник всегда 50 на 50
+        rect = surface.get_rect()
+        rect.center = (x,y)
+        return rect
+    
+    def Get_Surf_and_Rect(self, camera):
+        surface = self.GetSurface(camera)
+        rect = self.GetRectWihtSurf(surface, camera)
+        return surface, rect
         
 class Camera():
     def __init__(self,x=0,y=0):
@@ -133,7 +149,10 @@ class ScreenDrawer():
     """Класс отвечающий за вывод на экран"""
     def __init__(self,screen : pg.Surface, drawble_objects : list[Drawable]):
         self.screen=screen
-        self.drawble_objects=drawble_objects
+        self.drawble_objects=copy.copy(drawble_objects)
+    
+    def append_object(self, draweble_object : Drawable):
+        self.drawble_objects.append(draweble_object)
     
     def draw(self, camera : Camera):
         #Проходит по всем объектам в списке этого же класса и рисует их
@@ -150,9 +169,11 @@ class ScreenDrawer():
                     and cDrawebleObject.x - cDrawebleObject.collisionR < maxX 
                     and minY < cDrawebleObject.y + cDrawebleObject.collisionR
                     and cDrawebleObject.y - cDrawebleObject.collisionR < maxY):
-                    self.screen.blit(cDrawebleObject.GetSurface(camera), cDrawebleObject.GetRect(camera))
+                    surf, rect = cDrawebleObject.Get_Surf_and_Rect(camera)
+                    self.screen.blit(surf, rect)
             except:
                 if(minX < cDrawebleObject.x < maxX and minY < cDrawebleObject.y < maxY):
-                    self.screen.blit(cDrawebleObject.GetSurface(camera), cDrawebleObject.GetRect(camera))
+                    surf, rect = cDrawebleObject.Get_Surf_and_Rect(camera)
+                    self.screen.blit(surf, rect)
 
             

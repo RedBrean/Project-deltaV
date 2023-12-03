@@ -1,5 +1,5 @@
-WINDOW_WIDTH = 1000
-WINDOW_HEIGHT = 800
+WINDOW_WIDTH = 2000
+WINDOW_HEIGHT = 900
 
 file_name = "solar_system.txt"
 
