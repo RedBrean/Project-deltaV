@@ -37,7 +37,7 @@ while gameStage==0:
 
     mainPhisMod = PhysicalModulation(objects)
 
-    trajectory = Trajectory(objects, objects[3], objects[4], dt = 10000, Tsim=3*365*24*3600)
+    trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=False)
 
     drawer.append_object(trajectory)
     buttons = Buttons()
@@ -82,7 +82,7 @@ while gameStage==1:
     
     cam.Update()
 
-    trajectory.Update(100)
+    trajectory.Update(200)
 
     drawer.draw(cam)
     pg.display.update()
