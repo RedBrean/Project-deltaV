@@ -60,6 +60,8 @@ class Trajectory(Drawable):
         self.Tsim = Tsim
         self.calc_time = 0
 
+        self.Restart_sim() #Возможно оно повторяяет часть конструктора, но так безопаснее
+
 
     @property
     def x(self):
@@ -68,29 +70,34 @@ class Trajectory(Drawable):
     def y(self):
         return self.reletive_object.y
 
-    def Update(self, resolution_ticks):
+    def Update(self, iteretions):
         #FIXME настройки и логика обновления пока сложны
-        update_times = math.floor(self.Tsim/self.resolution/self.dt)
-        for _ in range(math.ceil(resolution_ticks)):
-            self.phys_sim.update_by_dt_few_times(self.dt, update_times)
+        ticks_to_next_point = self.step - (self.tick % self.step)
+        while (iteretions > ticks_to_next_point):
+            self.phys_sim.update_by_dt_few_times(self.dt, ticks_to_next_point)
+            self.tick += ticks_to_next_point
+            iteretions -= ticks_to_next_point
             x = self.my_main_object.x - self.my_reletive_object.x
             y = self.my_main_object.y - self.my_reletive_object.y
-
             self.new_trajectory_list.append((x, y))
-            self.calc_time += self.dt*update_times
-        
-        if(self.calc_time > self.Tsim):
+        self.phys_sim.update_by_dt_few_times(self.dt, iteretions)
+        self.tick += iteretions
+
+        if(self.tick > self.simTicks):
             self.trajectory_list = copy.copy(self.new_trajectory_list)
             self.Restart_sim()
 
 
     def Restart_sim(self):
         self.new_trajectory_list.clear()
-        self.calc_time = 0
         self.my_space_objects = copy.deepcopy(self.space_objects)
         self.my_main_object = self.my_space_objects[self.index_main_object]
         self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
+
+        self.tick = 0
+        self.simTicks = self.Tsim//self.dt
+        self.step = self.simTicks//self.resolution
 
     def GetSurface(self, camera) -> pg.Surface:
         if(len(self.trajectory_list) == 0):

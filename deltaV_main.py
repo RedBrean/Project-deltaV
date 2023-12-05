@@ -82,7 +82,7 @@ while gameStage==1:
     
     cam.Update()
 
-    trajectory.Update(0.1)
+    trajectory.Update(100)
 
     drawer.draw(cam)
     pg.display.update()
