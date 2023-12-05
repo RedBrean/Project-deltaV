@@ -120,8 +120,8 @@ class Trajectory(Drawable):
             if(point[1] < minY):
                 minY = point[1]
 
-        width = max(2*math.ceil(maxX - minX), 1)
-        hight = max(2*math.ceil(maxY - minY), 1)
+        width = max(2*math.ceil(abs(maxX) + abs(minX)), 1)
+        hight = max(2*math.ceil(abs(maxY) + abs(minY)), 1)
 
         points = list(map(lambda p: (p[0] + width/2, p[1] + hight/2), points))
         
