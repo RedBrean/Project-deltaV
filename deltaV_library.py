@@ -46,7 +46,8 @@ class GameObject(SpaceObject, Drawable):
 
 class Trajectory(Drawable):
     def __init__(self, space_objects : list[SpaceObject], main_object : SpaceObject, reletive_object : SpaceObject, 
-                 resolution = 100, dt = 3000, Tsim = 365*24*3600, needAutoOptimization = False, vanted_Iterations = 6000):
+                 resolution = 100, dt = 3000, Tsim = 365*24*3600, needAutoOptimization = False, vanted_Iterations = 6000,
+                 k_zamknutosti = 0.1, k_Tsim = 1.5, k_dt = 1):
         """ 
         аргументы: 
         dt - время шага расчета
@@ -75,9 +76,10 @@ class Trajectory(Drawable):
 
         self.needAutoOptimization = needAutoOptimization
         #дефолтные коэфициенты оптимизации
-        self.k_Tsim = 1 
-        self.k_dt = 1
+        self.k_Tsim = k_Tsim 
+        self.k_dt = k_dt
         self.vanted_Iterations = 6000
+        self.k_zamknutosti = k_zamknutosti
 
         self.Restart_sim() #Возможно оно повторяяет часть конструктора, но так безопаснее
 
@@ -100,12 +102,13 @@ class Trajectory(Drawable):
         #FIXME настройки и логика обновления пока сложны
         ticks_to_next_point = int(self.step - (self.tick % self.step))
         while (iteretions > ticks_to_next_point):
-            self.phys_sim.update_by_dt_few_times(self.dt, ticks_to_next_point)
-            self.tick += ticks_to_next_point
-            iteretions -= ticks_to_next_point
             x = self.my_main_object.x - self.my_reletive_object.x
             y = self.my_main_object.y - self.my_reletive_object.y
             self.new_trajectory_list.append((x, y))
+            self.phys_sim.update_by_dt_few_times(self.dt, ticks_to_next_point)
+            self.tick += ticks_to_next_point
+            iteretions -= ticks_to_next_point
+
         self.phys_sim.update_by_dt_few_times(self.dt, iteretions)
         self.tick += iteretions
 
@@ -113,14 +116,49 @@ class Trajectory(Drawable):
             self.trajectory_list = copy.copy(self.new_trajectory_list)
             self.Restart_sim()
 
-    def Optimize(self, k_Tsim = 1, k_dt = 1, vantedIterations = 6000):
+    def Optimize(self, vantedIterations = 6000, k_zamknutosti = 0.1, k_dt = 1, k_Tsim = 1.5):
         #FIXME Надо сделать более адеватный рассчет времени обращения
-        dist = ((self.my_main_object.x - self.reletive_object.x)**2 + (self.my_main_object.y - self.reletive_object.y)**2)**0.5
-        V = ((self.my_main_object.vx - self.reletive_object.vx)**2 + (self.my_main_object.vy - self.reletive_object.vy)**2)**0.5
-        Tsim = 2*math.pi*dist/V
-        dt = Tsim//vantedIterations // 1
-        self.Tsim = Tsim * k_Tsim //1
-        self.dt = dt * k_dt // 1
+        #dist = ((self.my_main_object.x - self.reletive_object.x)**2 + (self.my_main_object.y - self.reletive_object.y)**2)**0.5
+        #V = ((self.my_main_object.vx - self.reletive_object.vx)**2 + (self.my_main_object.vy - self.reletive_object.vy)**2)**0.5
+        #Tsim = 2*math.pi*dist/V
+        #dt = Tsim//vantedIterations // 1
+        #self.Tsim = Tsim * k_Tsim //1
+        #self.dt = dt * k_dt // 1
+
+        if (len(self.trajectory_list) > 1):
+
+            maxX = self.trajectory_list[0][0]
+            maxY = self.trajectory_list[0][1]
+            minX = maxX
+            minY = maxY
+            for point in self.trajectory_list:
+                if(point[0] > maxX):
+                    maxX = point[0]
+                if(point[0] < minX):
+                    minX = point[0]
+                if(point[1] > maxY):
+                    maxY = point[1]
+                if(point[1] < minY):
+                    minY = point[1]
+            dX = maxX-minX
+            dY = maxY-minY
+            needR = (dX**2 + dY**2)**0.5 * k_zamknutosti
+            refX = self.trajectory_list[0][0]
+            refY = self.trajectory_list[0][1]
+            stage = 0 #0 - пока не удалились, 1 - удалились, 2 - приблизились и сократили время
+            for i in range(1,len(self.trajectory_list)):
+                point = self.trajectory_list[i]
+                R = ((point[0]-refX)**2 + (point[1]-refY)**2)**0.5
+                if(R > needR/k_zamknutosti/5):
+                    stage = 1
+                if(R<needR and stage==1):
+                    self.Tsim = math.ceil(self.Tsim * i / len(self.trajectory_list)) * k_Tsim
+                    stage = 2
+                    break
+            if stage<2:
+                self.Tsim = math.ceil(self.Tsim*1.1)
+
+        self.dt = int(self.Tsim//vantedIterations // 1) * k_dt
 
     def Restart_sim(self):
         self.new_trajectory_list.clear()
@@ -134,7 +172,7 @@ class Trajectory(Drawable):
         self.step = self.simTicks//self.resolution
 
         if(self.needAutoOptimization):
-            self.Optimize(self.k_Tsim, self.k_dt, self.vanted_Iterations)
+            self.Optimize(self.vanted_Iterations, self.k_zamknutosti, self.k_dt, self.k_Tsim)
 
     def GetSurface(self, camera) -> pg.Surface:
         #if(len(self.trajectory_list) == 0):
