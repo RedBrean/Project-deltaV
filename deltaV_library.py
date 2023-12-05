@@ -12,6 +12,10 @@ class GameObject(SpaceObject, Drawable):
     def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0) -> None:
         SpaceObject.__init__(self, x, y, vx, vy, m)
         self.color = WHITE
+    @property
+    def visualR(self):
+        return self.collisionR
+    
     def GetSurface(self, camera) -> pg.Surface:
         R = max(3, self.collisionR * camera.scale)
         width  = 2*R
@@ -20,9 +24,16 @@ class GameObject(SpaceObject, Drawable):
         surf.fill(BLACK)
         surf.set_colorkey(BLACK)
         pg.draw.circle(surf, self.color, (width/2, hight/2), R)
+        self.__visualR = (width**2 + hight**2)**0.5
         surf = surf.convert_alpha()
         return surf
-    
+    @property
+    def visualR(self):
+        try:
+            return self.__visualR
+        except:
+            return 0
+
     def parse_from_list(self, parametrs):
         super().parse_from_list(parametrs)
         try:
@@ -35,7 +46,7 @@ class GameObject(SpaceObject, Drawable):
 
 class Trajectory(Drawable):
     def __init__(self, space_objects : list[SpaceObject], main_object : SpaceObject, reletive_object : SpaceObject, 
-                 resolution = 100, dt = 1000, Tsim = 365*24*3600):
+                 resolution = 100, dt = 3000, Tsim = 365*24*3600, needAutoOptimization = False, vanted_Iterations = 6000):
         """ 
         аргументы: 
         dt - время шага расчета
@@ -58,7 +69,15 @@ class Trajectory(Drawable):
         self.resolution = resolution
         self.dt = dt
         self.Tsim = Tsim
+        self.vanted_Iterations = vanted_Iterations
         self.calc_time = 0
+
+
+        self.needAutoOptimization = needAutoOptimization
+        #дефолтные коэфициенты оптимизации
+        self.k_Tsim = 1 
+        self.k_dt = 1
+        self.vanted_Iterations = 6000
 
         self.Restart_sim() #Возможно оно повторяяет часть конструктора, но так безопаснее
 
@@ -70,9 +89,16 @@ class Trajectory(Drawable):
     def y(self):
         return self.reletive_object.y
 
+    @property
+    def visualR(self):
+        try:
+#           return self.__visualR
+            return 0
+        except:
+            return 0
     def Update(self, iteretions):
         #FIXME настройки и логика обновления пока сложны
-        ticks_to_next_point = self.step - (self.tick % self.step)
+        ticks_to_next_point = int(self.step - (self.tick % self.step))
         while (iteretions > ticks_to_next_point):
             self.phys_sim.update_by_dt_few_times(self.dt, ticks_to_next_point)
             self.tick += ticks_to_next_point
@@ -87,6 +113,14 @@ class Trajectory(Drawable):
             self.trajectory_list = copy.copy(self.new_trajectory_list)
             self.Restart_sim()
 
+    def Optimize(self, k_Tsim = 1, k_dt = 1, vantedIterations = 6000):
+        #FIXME Надо сделать более адеватный рассчет времени обращения
+        dist = ((self.my_main_object.x - self.reletive_object.x)**2 + (self.my_main_object.y - self.reletive_object.y)**2)**0.5
+        V = ((self.my_main_object.vx - self.reletive_object.vx)**2 + (self.my_main_object.vy - self.reletive_object.vy)**2)**0.5
+        Tsim = 2*math.pi*dist/V
+        dt = Tsim//vantedIterations // 1
+        self.Tsim = Tsim * k_Tsim //1
+        self.dt = dt * k_dt // 1
 
     def Restart_sim(self):
         self.new_trajectory_list.clear()
@@ -99,19 +133,34 @@ class Trajectory(Drawable):
         self.simTicks = self.Tsim//self.dt
         self.step = self.simTicks//self.resolution
 
+        if(self.needAutoOptimization):
+            self.Optimize(self.k_Tsim, self.k_dt, self.vanted_Iterations)
+
     def GetSurface(self, camera) -> pg.Surface:
-        if(len(self.trajectory_list) == 0):
+        #if(len(self.trajectory_list) == 0):
+        #    surf = pg.Surface((10, 10))
+        #    surf.set_colorkey(BLACK)
+        #    surf.convert_alpha()
+        #    return surf
+
+        points = []
+    
+        camera_maxX = camera.x + WINDOW_WIDTH / camera.scale *2
+        camera_minX = camera.x - WINDOW_WIDTH / camera.scale *2
+        camera_maxY = camera.y + WINDOW_WIDTH / camera.scale *2
+        camera_minY = camera.y - WINDOW_WIDTH / camera.scale *2
+        for point in self.trajectory_list:
+            #FIXME точки неприятно зацикливаются
+            if(camera_minX < point[0] < camera_maxX and camera_minY < point[1] < camera_maxY):
+                point_x = (point[0]*camera.scale)
+                point_y = (point[1]*camera.scale)
+                points.append((point_x, point_y))
+        
+        if(len(points) == 0):
             surf = pg.Surface((10, 10))
             surf.set_colorkey(BLACK)
             surf.convert_alpha()
             return surf
-
-        points = []
-
-        for point in self.trajectory_list:
-            point_x = (point[0]*camera.scale)
-            point_y = (point[1]*camera.scale)
-            points.append((point_x, point_y))
 
         maxX = points[0][0]
         maxY = points[0][1]
@@ -127,6 +176,7 @@ class Trajectory(Drawable):
             if(point[1] < minY):
                 minY = point[1]
 
+
         width = max(2*math.ceil(abs(maxX) + abs(minX)), 1)
         hight = max(2*math.ceil(abs(maxY) + abs(minY)), 1)
 
@@ -136,8 +186,11 @@ class Trajectory(Drawable):
 
         surface.fill(BLACK)
         surface.set_colorkey(BLACK)
-        pg.draw.lines(surface, BLUE, False, points, 2)
+        if len(points) > 2:
+            pg.draw.lines(surface, BLUE, False, points, 2)
         
+        self.__visualR = (width ** 2 + hight**2)**0.5 / camera.scale
+
         surface.convert_alpha()
 
         return surface

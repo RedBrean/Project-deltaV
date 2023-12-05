@@ -15,6 +15,10 @@ class Drawable(object):
             self.x = x
             self.y = y
 
+    @property
+    def visualR(self):
+        return 0 #Выглядит как место где можно улучшить
+
     def GetSurface(self, camera) -> pg.Surface:
         #Долно скидывать полотно которое нужно вывести на экран
         #Пока что тут затычка
@@ -50,6 +54,8 @@ class Drawable(object):
         surface = self.GetSurface(camera)
         rect = self.GetRectWihtSurf(surface, camera)
         return surface, rect
+    
+    
         
 class Camera():
     def __init__(self,x=0,y=0):
@@ -169,10 +175,10 @@ class ScreenDrawer():
         for cDrawebleObject in self.drawble_objects:
             #FIXME тут костыль с collisionR
             try:            
-                if(minX < cDrawebleObject.x + cDrawebleObject.collisionR
-                    and cDrawebleObject.x - cDrawebleObject.collisionR < maxX 
-                    and minY < cDrawebleObject.y + cDrawebleObject.collisionR
-                    and cDrawebleObject.y - cDrawebleObject.collisionR < maxY):
+                if(minX < cDrawebleObject.x + cDrawebleObject.visualR
+                    and cDrawebleObject.x - cDrawebleObject.visualR < maxX 
+                    and minY < cDrawebleObject.y + cDrawebleObject.visualR
+                    and cDrawebleObject.y - cDrawebleObject.visualR < maxY):
                     surf, rect = cDrawebleObject.Get_Surf_and_Rect(camera)
                     self.screen.blit(surf, rect)
             except:
