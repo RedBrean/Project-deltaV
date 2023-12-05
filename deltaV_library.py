@@ -157,7 +157,8 @@ class Trajectory(Drawable):
                     break
             if stage<2:
                 self.Tsim = math.ceil(self.Tsim*1.1)
-
+        if (self.Tsim > 100*365*24*3600):
+            self.Tsim = 80*365*24*3600
         self.dt = int(self.Tsim//vantedIterations // 1) * k_dt
 
     def Restart_sim(self):
