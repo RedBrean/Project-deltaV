@@ -27,13 +27,13 @@ while gameStage==0:
     deltaV_test.testInit()
     clock = pg.time.Clock() 
     screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT)) 
-    #pg.font.init()
-    #f1 = pg.font.Font(None, 36)
+    pg.font.init()
+    f1 = pg.font.Font(None, 36)
 
 
 
     time_coefficients = [0.01, 0.1, 0.25, 0.5, 1, 2, 10, 25, 100, 250, 1000]
-    time_coefficient_number = 5
+    time_coefficient_number = 4
     time_coefficient = time_coefficients[time_coefficient_number]
     
  
@@ -76,15 +76,13 @@ while gameStage==1:
     mainPhisMod.update_by_dt_few_times(100*time_coefficient, 100)
     
     buttons.update()
-
-    #text1 = f1.render(str(time_coefficients[time_coefficient_number])+"X", 1, (255,255,255))
-    #screen.blit(text1, (80, 60))
     
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameStage="No"
         elif event.type == pg.KEYDOWN:
             cam.move_by_key(event)
+            #Player.dynamic_change(event)
             if event.key == pg.K_TAB:
                 cam.has_pivot = False
             if event.key == pg.K_EQUALS:
@@ -94,7 +92,7 @@ while gameStage==1:
                 if time_coefficient_number>1:
                     time_coefficient_number-=1
             if event.key == pg.K_1:
-                time_coefficient_number=5
+                time_coefficient_number=4
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
         elif event.type == pg.MOUSEBUTTONDOWN:
@@ -108,6 +106,10 @@ while gameStage==1:
     trajectory.Update(400)
 
     drawer.draw(cam)
+
+    text1 = f1.render(str(time_coefficients[time_coefficient_number])+"X", 1, (255,255,255))
+    screen.blit(text1, (20, 60))
+
     pg.display.update()
     clock.tick(150)
     

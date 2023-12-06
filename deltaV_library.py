@@ -247,8 +247,44 @@ class Trajectory(Drawable):
         self.trajectory_list.clear()
 
 class Player(GameObject):
-    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0) -> None:
+    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0) -> None:
         super().__init__(x, y, vx, vy, m)
+
+        self.thrust = 0
+        self.angle = angle
+
+        self.rotation_speed = 0
+        self.thrust_increase = 0
+    
+    def Update(self):
+        self.thrust+=self.thrust_increase
+        self.angle+=self.rotation_speed
+        if self.thrust>1:
+            self.thrust = 1
+        if self.angle>360:
+            self.angle = self.angle % 360
+
+    def dynamic_change(self,event):
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_w:
+                self.thrust_increase=0.05
+            elif event.key == pg.K_s:
+                self.thrust_increase=-0.05
+            elif event.key == pg.K_a:
+                self.rotation_speed=-10
+            elif event.key == pg.K_d:
+                self.rotation_speed=10
+        elif event.type == pg.KEYUP:
+            if event.key == pg.K_w:
+                self.thrust_increase=0
+            elif event.key == pg.K_s:
+                self.thrust_increase=0
+            elif event.key == pg.K_a:
+                self.rotation_speed=0
+            elif event.key == pg.K_d:
+                self.rotation_speed=0
+
+    
     
 class Buttons():
     """Класс множества кнопок"""
