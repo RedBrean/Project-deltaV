@@ -27,4 +27,4 @@ game_object; 2871.0E9; 0; 0; 6.84E3; 8.685E25; 2.5362e7; color blue
 
 game_object; 4498.3E9; 0; 0; 5.48E3; 1.024E26; 2.4622e7; color blue
 
-player; 149.60E9; 5.60E9; 0; 29.76E3; 5.974E24; 6.371e6
+player; 150E9; 0; 0; 35.76E3; 5; 6.371e6

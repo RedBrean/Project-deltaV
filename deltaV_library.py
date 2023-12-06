@@ -97,7 +97,7 @@ class Trajectory(Drawable):
     @property
     def visualR(self):
         try:
-#           return self.__visualR
+            return self.__visualR
             return 0
         except:
             return 0

@@ -56,7 +56,7 @@ while gameStage==0:
     if (player != None):
         trajectory = Trajectory(objects, player, objects[0], needAutoOptimization=False, k_Tsim=1.1)
     else:
-        trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=True, k_Tsim=1.1)
+        trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=False, k_Tsim=1.1)
 
     drawer.append_object(trajectory)
 
@@ -149,7 +149,7 @@ while gameStage==1:
     except:
         pass
 
-    trajectory.Update(400)
+    trajectory.Update(200)
 
     drawer.draw(cam)
 
