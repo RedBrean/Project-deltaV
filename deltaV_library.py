@@ -159,7 +159,7 @@ class Trajectory(Drawable):
                     stage = 2
                     break
             if stage<2:
-                self.Tsim = math.ceil(self.Tsim*1.1)
+                self.Tsim = math.ceil(self.Tsim*1.5)
         if (self.Tsim > 100*365*24*3600):
             self.Tsim = 80*365*24*3600
         self.dt = int(self.Tsim//vantedIterations // 1) * k_dt
@@ -175,7 +175,8 @@ class Trajectory(Drawable):
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
         self.tick = 0
-        self.simTicks = self.Tsim//self.dt
+        self.dt = math.ceil(self.Tsim//self.vanted_Iterations)
+        self.simTicks = math.ceil(self.Tsim//self.dt)
         self.step = self.simTicks//self.resolution
 
         if(self.needAutoOptimization):
@@ -245,15 +246,25 @@ class Trajectory(Drawable):
         self.Restart_sim()
         self.trajectory_list.clear()
 
-    
     def change_reletive_object(self, new_rel_object):
         self.reletive_object = new_rel_object
         self.index_reletive_object = self.space_objects.index(new_rel_object)
         self.Restart_sim()
         self.trajectory_list.clear()
 
+    def multiply_T_sim(self, k):
+        self.Tsim *= k
+        self.Restart_sim()
+    def switch_optimization(self):
+        self.needAutoOptimization = -self.needAutoOptimization
+        self.Restart_sim()
+    def set_Tsim_in_years(self, years):
+        self.needAutoOptimization = False
+        self.Tsim = math.ceil(years*365*24*3600)
+        self.Restart_sim()
+    
 class Player(GameObject):
-    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0, a_0 = 5) -> None:
+    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0, a_0 = 1) -> None:
         super().__init__(x, y, vx, vy, m)
 
         self.thrust = 0
