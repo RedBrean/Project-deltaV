@@ -168,6 +168,9 @@ class Trajectory(Drawable):
         self.new_trajectory_list.clear()
         self.my_space_objects = copy.deepcopy(self.space_objects)
         self.my_main_object = self.my_space_objects[self.index_main_object]
+        if isinstance(self.my_main_object, Player):
+            self.my_main_object.thrust = 0
+            #FIXME Костыль
         self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
@@ -303,8 +306,10 @@ class Player(GameObject):
         elif event.type == pg.KEYUP:
             if event.key == pg.K_w:
                 self.thrust_increase=0
+                self.thrust = 0 #FIXME костыль
             elif event.key == pg.K_s:
                 self.thrust_increase=0
+                self.thrust = 0 #FIXME костыль
             elif event.key == pg.K_a:
                 self.rotation_speed=0
             elif event.key == pg.K_d:

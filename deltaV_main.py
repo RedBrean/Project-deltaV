@@ -128,7 +128,7 @@ while gameStage==1:
     except:
         pass
 
-    trajectory.Update(50)
+    trajectory.Update(400)
 
     drawer.draw(cam)
 
