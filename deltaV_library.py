@@ -285,8 +285,10 @@ class Player(GameObject):
             self.angle = self.angle % 360
     
     def move(self, dt):
-        return super().move(dt)
+        super().move(dt)
         #FIXME Изменение скорости из-за работающей тяги
+        self.vx+=self.thrust*self.a_0*math.cos(self.angle*math.pi/180)
+        self.vy+=self.thrust*self.a_0*math.sin(self.angle*math.pi/180)
 
     def dynamic_change(self,event):
         if event.type == pg.KEYDOWN:
