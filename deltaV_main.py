@@ -37,7 +37,6 @@ while gameStage==0:
     time_coefficient = time_coefficients[time_coefficient_number]
     
  
-   
     
     objects = read_level_from_file(file_name)
     drawer = ScreenDrawer(screen,objects)
@@ -103,7 +102,7 @@ while gameStage==1:
     
     cam.Update()
 
-    trajectory.Update(400)
+    trajectory.Update(50)
 
     drawer.draw(cam)
 

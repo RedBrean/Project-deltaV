@@ -1,11 +1,14 @@
 """модуль в котором класссы всякой мелочевки"""
 import pygame as pg
 import copy
+from deltaV_physics import pg
 from deltaV_vis import*
 from deltaV_physics import*
 from deltaV_settings import*
 import math
 import time
+
+from deltaV_vis import pg
 
 
 class GameObject(SpaceObject, Drawable):
@@ -255,6 +258,19 @@ class Player(GameObject):
 
         self.rotation_speed = 0
         self.thrust_increase = 0
+        self.sprite = None
+    
+    def GetSurface(self, camera) -> pg.Surface:
+        if(self.sprite  != None):
+            surf = self.sprite
+        else:
+            surf = pg.Surface(20, 20)
+            surf.fill(BLACK)
+            surf.set_colorkey(BLACK)
+            #FIXME надо нарисовать треугольник смотрящий вправо
+            surf.convert_alpha()
+
+        return pg.transform.rotate(surf, self.angle)
     
     def Update(self):
         self.thrust+=self.thrust_increase
