@@ -269,6 +269,9 @@ class Player(GameObject):
             surf.fill(BLACK)
             surf.set_colorkey(BLACK)
             #FIXME надо нарисовать треугольник смотрящий вправо
+            pg.draw.polygon(surf, WHITE, 
+                    [[self.x, self.y+20], [self.x+50, self.y], 
+                     [self.x, self.y-20]])
             surf.convert_alpha()
 
         return pg.transform.rotate(surf, self.angle)
