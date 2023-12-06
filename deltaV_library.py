@@ -297,9 +297,9 @@ class Player(GameObject):
             elif event.key == pg.K_s:
                 self.thrust_increase=-0.05
             elif event.key == pg.K_a:
-                self.rotation_speed=-10
+                self.rotation_speed+=3
             elif event.key == pg.K_d:
-                self.rotation_speed=10
+                self.rotation_speed-=3
         elif event.type == pg.KEYUP:
             if event.key == pg.K_w:
                 self.thrust_increase=0

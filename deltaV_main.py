@@ -46,7 +46,17 @@ while gameStage==0:
 
     mainPhisMod = PhysicalModulation(objects)
 
-    trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=True, k_Tsim=1.1)
+    player = None
+    for cObject in objects:
+        if isinstance(cObject, Player):
+            player = cObject
+            break
+    if(player == None):
+        print("Нет игрока!")
+    if (player != None):
+        trajectory = Trajectory(objects, player, objects[0], needAutoOptimization=True, k_Tsim=1.1)
+    else:
+        trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=True, k_Tsim=1.1)
 
     drawer.append_object(trajectory)
     buttons = Buttons()
@@ -65,13 +75,7 @@ while gameStage==0:
 
         buttons.append(button)
     
-    player = None
-    for cObject in objects:
-        if isinstance(cObject, Player):
-            player = cObject
-            break
-    if(player == None):
-        print("Нет игрока!")
+
 
     gameStage = 1
 
@@ -107,6 +111,10 @@ while gameStage==1:
                 time_coefficient_number=4
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
+            try:
+                player.dynamic_change(event)
+            except:
+                pass
         elif event.type == pg.MOUSEBUTTONDOWN:
             buttons.try_pressing(event)
         else:
