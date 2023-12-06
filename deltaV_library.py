@@ -305,6 +305,15 @@ class Player(GameObject):
             elif event.key == pg.K_d:
                 self.rotation_speed=0
 
+    def parse_from_list(self, parametrs):
+        
+        #0-5 координаты и скорость
+        #sprite *название спрайта* если там оправдание отсутствия спрайта, то спрайта и не будет
+        SpaceObject.parse_from_list(self, parametrs) #координаты, скорость и масса
+        if(parametrs[6].split()[0] == "sprite"):
+            self.sprite = pg.image.load(f"sprites/{parametrs[6].split()[1]}")
+        
+        
     
     
 class Buttons():
