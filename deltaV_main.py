@@ -107,6 +107,10 @@ while gameStage==1:
                 time_coefficient_number=4
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
+            try:
+                player.dynamic_change(event)
+            except:
+                pass
         elif event.type == pg.MOUSEBUTTONDOWN:
             buttons.try_pressing(event)
         else:
