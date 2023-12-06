@@ -65,6 +65,14 @@ while gameStage==0:
 
         buttons.append(button)
     
+    player = None
+    for cObject in objects:
+        if isinstance(cObject, Player):
+            player = cObject
+            break
+    if(player == None):
+        print("Нет игрока!")
+
     gameStage = 1
 
 
@@ -81,7 +89,12 @@ while gameStage==1:
             gameStage="No"
         elif event.type == pg.KEYDOWN:
             cam.move_by_key(event)
-            #Player.dynamic_change(event)
+
+            try:
+                player.dynamic_change(event)
+            except:
+                pass
+
             if event.key == pg.K_TAB:
                 cam.has_pivot = False
             if event.key == pg.K_EQUALS:
@@ -101,6 +114,11 @@ while gameStage==1:
         cam.Scale(event)
     
     cam.Update()
+
+    try:
+        player.Update()
+    except:
+        pass
 
     trajectory.Update(50)
 
