@@ -265,7 +265,7 @@ class Player(GameObject):
         if(self.sprite  != None):
             surf = self.sprite
         else:
-            surf = pg.Surface(20, 20)
+            surf = pg.Surface((20, 20))
             surf.fill(BLACK)
             surf.set_colorkey(BLACK)
             #FIXME надо нарисовать треугольник смотрящий вправо
