@@ -250,11 +250,12 @@ class Trajectory(Drawable):
         self.trajectory_list.clear()
 
 class Player(GameObject):
-    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0) -> None:
+    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0, a_0 = 5) -> None:
         super().__init__(x, y, vx, vy, m)
 
         self.thrust = 0
         self.angle = angle
+        self.a_0 = a_0
 
         self.rotation_speed = 0
         self.thrust_increase = 0
@@ -282,6 +283,10 @@ class Player(GameObject):
             self.thrust = 1
         if self.angle>360:
             self.angle = self.angle % 360
+    
+    def move(self, dt):
+        return super().move(dt)
+        #FIXME Изменение скорости из-за работающей тяги
 
     def dynamic_change(self,event):
         if event.type == pg.KEYDOWN:
