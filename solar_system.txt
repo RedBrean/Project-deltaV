@@ -1,30 +1,30 @@
 # Солнечная система
-game_object; 0; 0; 0; 0; 1.98892E30; 6.957E8; color white
+game_object; 0; 0; 0; 0; 1.98892E30; 6.957E8; color white;sprite sun.png
 
 # Меркурий
-game_object; 57.909E9; 0; 0; 47.87E3; 3.302E23; 2.4397e6; color red
+game_object; 57.909E9; 0; 0; 47.87E3; 3.302E23; 2.4397e6; color red;sprite mercury.png
 
 # Венера
-game_object; 108.21E9; 0; 0; 35.02E3; 4.869E24; 6.0518e6; color cyan
+game_object; 108.21E9; 0; 0; 35.02E3; 4.869E24; 6.0518e6; color cyan;sprite venus.png
 
 # Земля
-game_object; 149.60E9; 0; 0; 29.76E3; 5.974E24; 6.371e6; color green
+game_object; 149.60E9; 0; 0; 29.76E3; 5.974E24; 6.371e6; color green;sprite earth.png
 
 #Марс
-game_object; 227.94E9; 0; 0; 24.13E3; 6.419E23; 3.3895e6; color red
+game_object; 227.94E9; 0; 0; 24.13E3; 6.419E23; 3.3895e6; color red;sprite mars.png
 
 # Юпитер
-game_object; 778.41E9; 0; 0; 13.07E3; 1.899E27; 6.9911e7; color MAGENTA    
+game_object; 778.41E9; 0; 0; 13.07E3; 1.899E27; 6.9911e7; color MAGENTA;sprite jupyter.png   
 
 # Сатурн
-game_object; 1429.4E9; 0; 0; 9.67E3; 5.685E26; 5.8232e7; color yellow  
+game_object; 1429.4E9; 0; 0; 9.67E3; 5.685E26; 5.8232e7; color yellow;sprite saturn.png
 
 # Уран
 
-game_object; 2871.0E9; 0; 0; 6.84E3; 8.685E25; 2.5362e7; color blue 
+game_object; 2871.0E9; 0; 0; 6.84E3; 8.685E25; 2.5362e7; color blue;sprite neptune.png
 
 # Нептун
 
-game_object; 4498.3E9; 0; 0; 5.48E3; 1.024E26; 2.4622e7; color blue
+game_object; 4498.3E9; 0; 0; 5.48E3; 1.024E26; 2.4622e7; color blue;sprite neptune.png
 
-player; 150E9; 0; 0; 35.76E3; 5; 6.371e6
+player; 150E9; 0; 0; 35.76E3; 5; 6.371e6; ; sprite rocket.png
