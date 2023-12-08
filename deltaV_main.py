@@ -32,7 +32,7 @@ while gameStage==0:
 
 
 
-    time_coefficients = [[1,1], [5,20], [20,50], [20,125], [50,100], [50,200], [50, 500], [100, 500], [200, 500], [500, 1000], [500, 2000], [500, 4000]]
+    time_coefficients = [[1,1], [100,1], [100,5], [100,20], [100,50], [100,100], [100, 200], [100, 500], [200, 500], [500, 1000], [500, 2000], [500, 4000]]
     time_coefficient_number = 0
     #1,100, 1000, 2500, 5000,10000, 25000, 50000, 100000, 500000, 1m
     time_coefficient = time_coefficients[time_coefficient_number]
@@ -56,6 +56,11 @@ while gameStage==0:
         print("Нет игрока!")
     if (player != None):
         trajectory = Trajectory(objects, player, objects[0], needAutoOptimization=False, k_Tsim=1.1)
+        cam.SetPivot(player)
+        if(EARCH_DEFOULT):
+            cam.scale *= 20000
+            trajectory.change_reletive_object(objects[3])
+            trajectory.set_Tsim_in_years(0.005)
     else:
         trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=False, k_Tsim=1.1)
 

@@ -3,6 +3,8 @@ WINDOW_HEIGHT = 700
 
 VANTED_ITERATIONS = 4000
 
+EARCH_DEFOULT =  True
+
 file_name = "solar_system.txt"
 
 RED = 0xFF0000
