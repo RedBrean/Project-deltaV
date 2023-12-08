@@ -86,8 +86,6 @@ class Trajectory(Drawable):
 
         self.Restart_sim() #Возможно оно повторяяет часть конструктора, но так безопаснее
 
-        self.trajectory_log_file = open("trajectory.txt", "w") #FIXME
-
 
     @property
     def x(self):
