@@ -60,7 +60,11 @@ class Trajectory(Drawable):
         self.index_reletive_object = space_objects.index(reletive_object)
 
         self.space_objects = space_objects
-        self.my_space_objects = copy.deepcopy(space_objects)
+
+        self.my_space_objects = []
+        for space_object in self.space_objects:
+            self.my_space_objects.append(SpaceObject.copy(space_object))
+
         self.my_main_object = self.my_space_objects[self.index_main_object]
         self.reletive_object = reletive_object
         self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
@@ -173,7 +177,10 @@ class Trajectory(Drawable):
 
     def Restart_sim(self):
         self.new_trajectory_list.clear()
-        self.my_space_objects = copy.deepcopy(self.space_objects)
+        self.my_space_objects = []
+        for space_object in self.space_objects:
+            self.my_space_objects.append(SpaceObject.copy(space_object))
+
         self.my_main_object = self.my_space_objects[self.index_main_object]
         if isinstance(self.my_main_object, Player):
             self.my_main_object.thrust = 0
@@ -183,6 +190,7 @@ class Trajectory(Drawable):
 
         self.tick = 0
         self.dt = math.ceil(self.Tsim//self.vanted_Iterations)
+        self.dt = max(self.dt, 1)
         self.simTicks = math.ceil(self.Tsim//self.dt)
         self.step = self.simTicks//self.resolution
 
@@ -358,8 +366,6 @@ class Player(GameObject):
         except:
             print("Штирлиц отбивал шифровку в штаб. Он не знал азбуки морзе, \n но по радостному пиликанию в штабе поняли - Задание Партии выполнено")
             
-        
-    
     
 class Buttons():
     """Класс множества кнопок"""

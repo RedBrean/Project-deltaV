@@ -15,6 +15,17 @@ class SpaceObject:
         self.m = m
         self.collisionR = collisionR 
 
+    def copy(anotherObject):
+        obj = SpaceObject()
+        obj.x = anotherObject.x
+        obj.y = anotherObject.y
+        obj.vx = anotherObject.vx
+        obj.vy = anotherObject.vy
+        obj.m = anotherObject.m
+        obj.collisionR = anotherObject.collisionR
+
+        return obj
+
     def move_by_gravity_of_spaceobjects_list(self, dt, AnotherSpaceObjects:list):
         """Изменяет скорость космического тела гравитацией других тел за время dt"""
         for spaceObject in AnotherSpaceObjects:
