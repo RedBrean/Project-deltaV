@@ -332,8 +332,9 @@ class Player(GameObject):
         #sprite *название спрайта* если там оправдание отсутствия спрайта, то спрайта и не будет
         SpaceObject.parse_from_list(self, parametrs) #координаты, скорость и масса
         try:
-            if(parametrs[6].split()[0] == "sprite"):
-                self.sprite = pg.image.load(f"sprites/{parametrs[6].split()[1]}")
+            if(parametrs[7].split()[0] == "sprite"):
+                pass
+                #self.sprite = pg.image.load(f"sprites/{parametrs[7].split()[1]}")
         except:
             print("Штирлиц отбивал шифровку в штаб. Он не знал азбуки морзе, \n но по радостному пиликанию в штабе поняли - Задание Партии выполнено")
             

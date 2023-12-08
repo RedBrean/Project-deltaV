@@ -89,6 +89,8 @@ while gameStage==1:
 
     time_coefficient = time_coefficients[time_coefficient_number]
     
+    thrust = player.thrust
+
     mainPhisMod.update_by_dt_few_times(time_coefficient[1], time_coefficient[0])
     
     buttons.update()
@@ -154,13 +156,9 @@ while gameStage==1:
 
     drawer.draw(cam)
 
-    if time_coefficient[0]*time_coefficient[1] <1000:
-        text1 = f1.render(str(time_coefficient[0]*time_coefficient[1])+"X", 1, (255,255,255))
-    elif time_coefficient[0]*time_coefficient[1] < 1000000:
-        text1 = f1.render(str((time_coefficient[0]*time_coefficient[1])//1000)+"kX", 1, (255,255,255))
-    elif time_coefficient[0]*time_coefficient[1] >= 1000000:
-        text1 = f1.render(str((time_coefficient[0]*time_coefficient[1])//1000000)+"MX", 1, (255,255,255))
+    text1 = f1.render(str(time_coefficients[time_coefficient_number])+"X", 1, (255,255,255))
     screen.blit(text1, (20, 60))
+    screen.blit(text2, (780, 60))
 
     pg.display.update()
     clock.tick(150)
