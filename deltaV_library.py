@@ -86,13 +86,22 @@ class Trajectory(Drawable):
 
         self.Restart_sim() #Возможно оно повторяяет часть конструктора, но так безопаснее
 
+        self.trajectory_log_file = open("trajectory.txt", "w") #FIXME
+
 
     @property
     def x(self):
-        return self.reletive_object.x
+        if(not self.custom_coord):
+            return self.reletive_object.x
+        else:
+            return self.custom_x
+        
     @property
     def y(self):
-        return self.reletive_object.y
+        if(not self.custom_coord):
+            return self.reletive_object.y
+        else:
+            return self.custom_y
 
     @property
     def visualR(self):
@@ -182,25 +191,30 @@ class Trajectory(Drawable):
         if(self.needAutoOptimization):
             self.Optimize(self.vanted_Iterations, self.k_zamknutosti, self.k_dt, self.k_Tsim)
 
+        self.custom_coord = False
+
     def GetSurface(self, camera) -> pg.Surface:
-        #if(len(self.trajectory_list) == 0):
-        #    surf = pg.Surface((10, 10))
-        #    surf.set_colorkey(BLACK)
-        #    surf.convert_alpha()
-        #    return surf
+        if(len(self.trajectory_list) == 0):
+            surf = pg.Surface((10, 10))
+            surf.set_colorkey(BLACK)
+            surf.convert_alpha()
+            return surf
 
         points = []
     
-        camera_maxX = camera.x + WINDOW_WIDTH / camera.scale *2
-        camera_minX = camera.x - WINDOW_WIDTH / camera.scale *2
-        camera_maxY = camera.y + WINDOW_WIDTH / camera.scale *2
-        camera_minY = camera.y - WINDOW_WIDTH / camera.scale *2
-        for point in self.trajectory_list:
+        camera_maxX = camera.x + WINDOW_WIDTH  / camera.scale *2
+        camera_minX = camera.x - WINDOW_WIDTH  / camera.scale *2
+        camera_maxY = camera.y + WINDOW_HEIGHT / camera.scale *2
+        camera_minY = camera.y - WINDOW_HEIGHT / camera.scale *2
+
+        for i in range(len(self.trajectory_list)):
             #FIXME точки неприятно зацикливаются
-            if(camera_minX < point[0] < camera_maxX and camera_minY < point[1] < camera_maxY):
+            point = self.trajectory_list[i]
+            if(camera_minX < point[0] + self.reletive_object.x < camera_maxX
+                and camera_minY < point[1] + self.reletive_object.y < camera_maxY):
                 point_x = (point[0]*camera.scale)
                 point_y = (point[1]*camera.scale)
-                points.append((point_x, point_y))
+                points.append((point_x, point_y, i))
         
         if(len(points) == 0):
             surf = pg.Surface((10, 10))
@@ -212,6 +226,7 @@ class Trajectory(Drawable):
         maxY = points[0][1]
         minX = maxX
         minY = maxY
+
         for point in points:
             if(point[0] > maxX):
                 maxX = point[0]
@@ -222,18 +237,25 @@ class Trajectory(Drawable):
             if(point[1] < minY):
                 minY = point[1]
 
+        width = 2*math.ceil(max(abs(maxX), abs(minX))) + 10
+        hight = 2*math.ceil(max(abs(maxY), abs(minY))) + 10
 
-        width = max(2*math.ceil(abs(maxX) + abs(minX)), 1)
-        hight = max(2*math.ceil(abs(maxY) + abs(minY)), 1)
 
-        points = list(map(lambda p: (p[0] + width/2, p[1] + hight/2), points))
-        
+        points = list(map(lambda p: (p[0] + width/2, p[1] + hight/2, p[2]), points))
+    
+
+        #self.trajectory_log_file.write(f"width : {width}\nhight: {hight}\n")
+
         surface = pg.Surface([width, hight])
 
         surface.fill(BLACK)
         surface.set_colorkey(BLACK)
         if len(points) > 2:
-            pg.draw.lines(surface, BLUE, False, points, 2)
+            prev_point = (0,0,-5)
+            for point in points:
+                if(point[2] == prev_point[2]+1):
+                    pg.draw.line(surface, BLUE, prev_point[0:2], point[0:2], 4)
+                prev_point = point
         
         self.__visualR = (width ** 2 + hight**2)**0.5 / camera.scale
 
@@ -256,7 +278,7 @@ class Trajectory(Drawable):
         self.Tsim *= k
         self.Restart_sim()
     def switch_optimization(self):
-        self.needAutoOptimization = -self.needAutoOptimization
+        self.needAutoOptimization = not self.needAutoOptimization
         self.Restart_sim()
     def set_Tsim_in_years(self, years):
         self.needAutoOptimization = False

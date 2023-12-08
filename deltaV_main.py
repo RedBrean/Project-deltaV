@@ -112,8 +112,9 @@ while gameStage==1:
                     time_coefficient_number-=1
             if event.key == pg.K_0:
                 time_coefficient_number=4
-            if event.key == pg.K_o:
+            if event.key == pg.K_i:
                 trajectory.switch_optimization()
+                print(trajectory.needAutoOptimization)
             if event.key == pg.K_1:
                 trajectory.set_Tsim_in_years(trajectory_Tsims[0])
             if event.key == pg.K_2:
@@ -151,6 +152,8 @@ while gameStage==1:
 
     trajectory.Update(200)
 
+#    traj_surf, traj_rect = trajectory.Get_Surf_and_Rect(cam)
+#    screen.blit(traj_surf, traj_rect)
     drawer.draw(cam)
 
     text1 = f1.render(str(time_coefficients[time_coefficient_number])+"X", 1, (255,255,255))
