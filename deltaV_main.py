@@ -35,7 +35,7 @@ while gameStage==0:
     time_coefficients = [[1,1], [5,20], [10,100], [10,250], [10,500], [10,1000], [10, 2500], [50, 1000], [100, 1000], [100, 5000], [100, 10000], [200, 10000]]
     time_coefficient_number = 0
     #1,100, 1000, 2500, 5000,10000, 25000, 50000, 100000, 500000, 1m
-    time_coefficient = time_coefficients[time_coefficient_number][1]
+    time_coefficient = time_coefficients[time_coefficient_number]
     trajectory_Tsims = [0.01, 0.02, 0.05, 0.1, 0.3, 0.6, 1, 2, 4]
  
     
@@ -114,7 +114,7 @@ while gameStage==1:
                 if time_coefficient_number>0:
                     time_coefficient_number-=1
             if event.key == pg.K_0:
-                time_coefficient_number=1
+                time_coefficient_number=0
             if event.key == pg.K_o:
                 trajectory.switch_optimization()
 
@@ -159,7 +159,12 @@ while gameStage==1:
 #    screen.blit(traj_surf, traj_rect)
     drawer.draw(cam)
 
-    text1 = f1.render(str(time_coefficients[time_coefficient_number])+"X", 1, (255,255,255))
+    if time_coefficient[1]*time_coefficient[0] <1000:
+        text1 = f1.render(str(time_coefficient[1]*time_coefficient[0])+"X", 1, (255,255,255))
+    elif time_coefficient[1]*time_coefficient[0] <1000000:
+        text1 = f1.render(str((time_coefficient[1]*time_coefficient[0])//1000)+"kX", 1, (255,255,255))
+    elif time_coefficient[1]*time_coefficient[0] >=1000000:
+        text1 = f1.render(str((time_coefficient[1]*time_coefficient[0])//1000000)+"MX", 1, (255,255,255))
     text2 = f1.render(str(round(thrust,2)), 1, (255,255,255))
     screen.blit(text1, (20, 60))
     screen.blit(text2, (780, 60))
