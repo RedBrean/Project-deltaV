@@ -1,6 +1,8 @@
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 700
 
+VANTED_ITERATIONS = 4000
+
 file_name = "solar_system.txt"
 
 RED = 0xFF0000

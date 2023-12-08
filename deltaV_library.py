@@ -284,7 +284,7 @@ class Trajectory(Drawable):
         self.Restart_sim()
     
 class Player(GameObject):
-    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0, a_0 = 1) -> None:
+    def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0, a_0 = 10) -> None:
         super().__init__(x, y, vx, vy, m)
 
         self.thrust = 0

@@ -78,7 +78,7 @@ while gameStage==0:
         buttons.append(button)
     
 
-    trajectory.vanted_Iterations = 1000
+    trajectory.vanted_Iterations = VANTED_ITERATIONS
     trajectory.k_zamknutosti = 0.2
     trajectory.k_Tsim = 1.5
     trajectory.needAutoOptimization = True
