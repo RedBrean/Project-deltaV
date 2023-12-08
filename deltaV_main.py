@@ -157,6 +157,7 @@ while gameStage==1:
     drawer.draw(cam)
 
     text1 = f1.render(str(time_coefficients[time_coefficient_number])+"X", 1, (255,255,255))
+    text2 = f1.render(str(round(thrust,2)), 1, (255,255,255))
     screen.blit(text1, (20, 60))
     screen.blit(text2, (780, 60))
 
