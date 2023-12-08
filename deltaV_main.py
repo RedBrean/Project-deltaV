@@ -32,9 +32,10 @@ while gameStage==0:
 
 
 
-    time_coefficients = [0.01, 0.1, 0.25, 0.5, 1, 2, 10, 25, 100, 250, 1000]
-    time_coefficient_number = 4
-    time_coefficient = time_coefficients[time_coefficient_number]
+    time_coefficients = [[1,1], [5,20], [10,100], [10,250], [10,500], [10,1000], [10, 2500], [50, 1000], [100, 1000], [100, 5000], [100, 10000], [200, 10000]]
+    time_coefficient_number = 0
+    #1,100, 1000, 2500, 5000,10000, 25000, 50000, 100000, 500000, 1m
+    time_coefficient = time_coefficients[time_coefficient_number][1]
     trajectory_Tsims = [0.01, 0.02, 0.05, 0.1, 0.3, 0.6, 1, 2, 4]
  
     
@@ -88,7 +89,7 @@ while gameStage==1:
 
     time_coefficient = time_coefficients[time_coefficient_number]
     
-    mainPhisMod.update_by_dt_few_times(100*time_coefficient, 100)
+    mainPhisMod.update_by_dt_few_times(time_coefficient[1], time_coefficient[0])
     
     buttons.update()
     
@@ -108,10 +109,10 @@ while gameStage==1:
                 if time_coefficient_number<len(time_coefficients)-1:
                     time_coefficient_number+=1
             if event.key == pg.K_MINUS:
-                if time_coefficient_number>1:
+                if time_coefficient_number>0:
                     time_coefficient_number-=1
             if event.key == pg.K_0:
-                time_coefficient_number=4
+                time_coefficient_number=1
             if event.key == pg.K_o:
                 trajectory.switch_optimization()
             if event.key == pg.K_1:
@@ -153,7 +154,12 @@ while gameStage==1:
 
     drawer.draw(cam)
 
-    text1 = f1.render(str(time_coefficients[time_coefficient_number])+"X", 1, (255,255,255))
+    if time_coefficient[0]*time_coefficient[1] <1000:
+        text1 = f1.render(str(time_coefficient[0]*time_coefficient[1])+"X", 1, (255,255,255))
+    elif time_coefficient[0]*time_coefficient[1] < 1000000:
+        text1 = f1.render(str((time_coefficient[0]*time_coefficient[1])//1000)+"kX", 1, (255,255,255))
+    elif time_coefficient[0]*time_coefficient[1] >= 1000000:
+        text1 = f1.render(str((time_coefficient[0]*time_coefficient[1])//1000000)+"MX", 1, (255,255,255))
     screen.blit(text1, (20, 60))
 
     pg.display.update()
