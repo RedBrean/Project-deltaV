@@ -21,6 +21,9 @@ class GameObject(SpaceObject, Drawable):
     
     def GetSurface(self, camera) -> pg.Surface:
         R = max(3, self.collisionR * camera.scale)
+        if(R == 3):
+            if hasattr(self, "sprite"):
+                return self.sprite
         width  = 2*R
         hight = 2*R
         surf = pg.Surface((width,hight))
@@ -43,6 +46,10 @@ class GameObject(SpaceObject, Drawable):
             spriteSettings = parametrs[6].split()
             if(spriteSettings[0] == "color"):
                 self.color = color_from_str(spriteSettings[1])
+            spriteFile = parametrs[7].split()
+            if(spriteFile[0] == "sprite"):
+                self.sprite = pg.image.load(f"sprites/{spriteFile[1]}")
+                self.sprite = pg.transform.scale_by(self.sprite, 0.07)
         except:
             print("Что-то неладное в настройках отображения")
     
@@ -361,8 +368,8 @@ class Player(GameObject):
         SpaceObject.parse_from_list(self, parametrs) #координаты, скорость и масса
         try:
             if(parametrs[7].split()[0] == "sprite"):
-                pass
-                #self.sprite = pg.image.load(f"sprites/{parametrs[7].split()[1]}")
+                self.sprite = pg.image.load(f"sprites/{parametrs[7].split()[1]}")
+                self.sprite = pg.transform.scale_by(self.sprite, 0.05)
         except:
             print("Штирлиц отбивал шифровку в штаб. Он не знал азбуки морзе, \n но по радостному пиликанию в штабе поняли - Задание Партии выполнено")
             
