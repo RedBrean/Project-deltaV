@@ -311,8 +311,12 @@ class Player(GameObject):
         self.sprite = None
     
     def GetSurface(self, camera) -> pg.Surface:
-        if(self.sprite  != None):
-            surf = self.sprite
+        if  hasattr(self, "sprite"):
+            if hasattr(self, "sprite_no_thrust") and self.thrust == 0:
+                surf = self.sprite_no_thrust
+            else:
+                surf = self.sprite
+
         else:
             surf = pg.Surface((20, 20))
             surf.fill(BLACK)
@@ -369,7 +373,14 @@ class Player(GameObject):
         try:
             if(parametrs[7].split()[0] == "sprite"):
                 self.sprite = pg.image.load(f"sprites/{parametrs[7].split()[1]}")
+                self.sprite = pg.transform.rotate(self.sprite, 3)
                 self.sprite = pg.transform.scale_by(self.sprite, 0.05)
+            if(parametrs[8].split()[0] == "sprite_no_thrust"):
+                self.sprite_no_thrust = pg.image.load(f"sprites/{parametrs[8].split()[1]}")
+                self.sprite_no_thrust = pg.transform.rotate(self.sprite_no_thrust, 4)
+               
+                self.sprite_no_thrust = pg.transform.scale_by(self.sprite_no_thrust, 0.05)
+
         except:
             print("Штирлиц отбивал шифровку в штаб. Он не знал азбуки морзе, \n но по радостному пиликанию в штабе поняли - Задание Партии выполнено")
             
