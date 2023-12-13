@@ -309,10 +309,11 @@ class Player(GameObject):
         self.rotation_speed = 0
         self.thrust_increase = 0
         self.sprite = None
-    
+        self.sprite_no_thrust = None
+        self.deltaV = math.inf
     def GetSurface(self, camera) -> pg.Surface:
-        if  hasattr(self, "sprite"):
-            if hasattr(self, "sprite_no_thrust") and self.thrust == 0:
+        if (self.sprite != None):
+            if self.sprite_no_thrust != None and self.thrust == 0:
                 surf = self.sprite_no_thrust
             else:
                 surf = self.sprite
@@ -340,6 +341,7 @@ class Player(GameObject):
     def move(self, dt):
         super().move(dt)
         #FIXME Изменение скорости из-за работающей тяги
+        self.deltaV -= self.thrust*self.a_0*dt
         self.vx+=self.thrust*self.a_0*math.cos(self.angle*math.pi/180)
         self.vy-=self.thrust*self.a_0*math.sin(self.angle*math.pi/180)
 
@@ -370,6 +372,8 @@ class Player(GameObject):
         #0-5 координаты и скорость
         #sprite *название спрайта* если там оправдание отсутствия спрайта, то спрайта и не будет
         SpaceObject.parse_from_list(self, parametrs) #координаты, скорость и масса
+        if(parametrs[6].split()[0] == "deltaV"):
+            self.deltaV = float(parametrs[6].split()[1])
         try:
             if(parametrs[7].split()[0] == "sprite"):
                 self.sprite = pg.image.load(f"sprites/{parametrs[7].split()[1]}")
