@@ -26,9 +26,14 @@ while gameStage==0:
     pg.init()
     deltaV_test.testInit()
     clock = pg.time.Clock() 
-    screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT)) 
+    screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+    f1 = pg.font.Font(None, int(round(WINDOW_HEIGHT*36/850)))
+    f2 = pg.font.Font(None, int(round(WINDOW_HEIGHT*25/850))) 
     pg.font.init()
-    f1 = pg.font.Font(None, 36)
+    WH = WINDOW_HEIGHT
+    WW = WINDOW_WIDTH
+    
 
 
 
@@ -95,6 +100,7 @@ while gameStage==1:
     time_coefficient = time_coefficients[time_coefficient_number]
     
     thrust = player.thrust
+
 
     mainPhisMod.update_by_dt_few_times(time_coefficient[1], time_coefficient[0])
     
@@ -175,10 +181,17 @@ while gameStage==1:
     elif time_coefficient[1]*time_coefficient[0] >=1000000:
         text1 = f1.render(str((time_coefficient[1]*time_coefficient[0])//1000000)+"MX", 1, (255,255,255))
     text2 = f1.render(str(round(thrust,2)), 1, (255,255,255))
-    text3 = f1.render("управление: WASD - ракета, стрелки - камера, скролл - масштабирование, +/- время ",1,(255,255,255))
-    screen.blit(text1, (20, 60))
-    screen.blit(text2, (1150, 60))
-    screen.blit(text3, (20, 800))
+    text3 = f2.render("управление: WASD - ракета, ",1,(255,255,255))
+    text4 = f2.render("стрелки - камера, скролл - масштабирование, +/- время ",1,(255,255,255))
+    text5 = f2.render("Цифры 1-8 - предустановленные длины траектории",1,(255,255,255))
+    text6 = f2.render("u - добавить длину,i - убавить длину, o - замкнуть траекторию",1,(255,255,255))
+    screen.blit(text1, (WW*2/100, WH/50))
+    screen.blit(text2, (WW*98/100, WH/50))
+    screen.blit(text3, (WW/100, WH*46/50))
+    screen.blit(text4, (WW/100, WH*47/50))
+    screen.blit(text5, (WW/100, WH*48/50))
+    screen.blit(text6,(WW/100, WH*49/50))
+
 
     pg.display.update()
     clock.tick(150)
