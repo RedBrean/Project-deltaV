@@ -297,6 +297,12 @@ class Trajectory(Drawable):
         self.needAutoOptimization = False
         self.Tsim = math.ceil(years*365*24*3600)
         self.Restart_sim()
+
+    def get_reletive_speed(self):
+        main_object = self.space_objects[self.index_main_object]
+        reletive_object = self.space_objects[self.index_reletive_object]
+
+        return ((main_object.vx - reletive_object.vx)**2 + (main_object.vy - reletive_object.vy)**2)**0.5
     
 class Player(GameObject):
     def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0, angle = 0, a_0 = 10) -> None:

@@ -170,7 +170,7 @@ while gameStage==1:
 
     trajectory.Update(200)
 
-    print(player.deltaV)
+    print(trajectory.get_reletive_speed())
 
     drawer.draw(cam)
 
