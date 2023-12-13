@@ -348,6 +348,7 @@ class Player(GameObject):
             self.angle = self.angle % 360
         if self.deltaV <= 0:
             self.thrust = 0
+            self.deltaV = 0
     
     def move(self, dt):
         super().move(dt)
