@@ -350,9 +350,9 @@ class Player(GameObject):
     def dynamic_change(self,event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_w:
-                self.thrust_increase=0.05
+                self.thrust_increase=0.02
             elif event.key == pg.K_s:
-                self.thrust_increase=-0.05
+                self.thrust_increase=-0.02
             elif event.key == pg.K_a:
                 self.rotation_speed+=3
             elif event.key == pg.K_d:
