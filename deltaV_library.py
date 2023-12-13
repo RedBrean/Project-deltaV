@@ -335,6 +335,8 @@ class Player(GameObject):
         self.angle+=self.rotation_speed
         if self.thrust>1:
             self.thrust = 1
+        if self.thrust<-1:
+            self.thrust = -1
         if self.angle>360:
             self.angle = self.angle % 360
     
