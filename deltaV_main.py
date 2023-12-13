@@ -139,6 +139,10 @@ while gameStage==1:
                 trajectory.set_Tsim_in_years(trajectory_Tsims[6])
             if event.key == pg.K_8:
                 trajectory.set_Tsim_in_years(trajectory_Tsims[7])
+            if event.key == pg.K_i:
+                trajectory.multiply_T_sim(1.2)
+            if event.key == pg.K_u:
+                trajectory.multiply_T_sim(1/1.2)
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
             try:
