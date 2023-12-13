@@ -170,8 +170,8 @@ while gameStage==1:
 
     trajectory.Update(200)
 
-#    traj_surf, traj_rect = trajectory.Get_Surf_and_Rect(cam)
-#    screen.blit(traj_surf, traj_rect)
+    print(player.deltaV)
+
     drawer.draw(cam)
 
     if time_coefficient[1]*time_coefficient[0] <1000:
