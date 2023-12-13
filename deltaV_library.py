@@ -333,12 +333,15 @@ class Player(GameObject):
     def Update(self):
         self.thrust+=self.thrust_increase
         self.angle+=self.rotation_speed
+        
         if self.thrust>1:
             self.thrust = 1
         if self.thrust<-1:
             self.thrust = -1
         if self.angle>360:
             self.angle = self.angle % 360
+        if self.deltaV <= 0:
+            self.thrust = 0
     
     def move(self, dt):
         super().move(dt)
