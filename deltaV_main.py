@@ -177,8 +177,8 @@ while gameStage==1:
     text2 = f1.render(str(round(thrust,2)), 1, (255,255,255))
     text3 = f1.render("управление: WASD - ракета, стрелки - камера, скролл - масштабирование, +/- время ",1,(255,255,255))
     screen.blit(text1, (20, 60))
-    screen.blit(text2, (780, 60))
-    screen.blit(text3, (20, 580))
+    screen.blit(text2, (1150, 60))
+    screen.blit(text3, (20, 800))
 
     pg.display.update()
     clock.tick(150)
