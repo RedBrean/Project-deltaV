@@ -101,7 +101,6 @@ while gameStage==1:
     
     thrust = player.thrust
 
-
     mainPhisMod.update_by_dt_few_times(time_coefficient[1], time_coefficient[0])
     
     buttons.update()
@@ -170,7 +169,7 @@ while gameStage==1:
 
     trajectory.Update(200)
 
-    print(trajectory.get_reletive_speed())
+    print(player.deltaV)
 
     drawer.draw(cam)
 
@@ -180,18 +179,19 @@ while gameStage==1:
         text1 = f1.render(str((time_coefficient[1]*time_coefficient[0])//1000)+"kX", 1, (255,255,255))
     elif time_coefficient[1]*time_coefficient[0] >=1000000:
         text1 = f1.render(str((time_coefficient[1]*time_coefficient[0])//1000000)+"MX", 1, (255,255,255))
-    text2 = f1.render(str(round(thrust,2)), 1, (255,255,255))
+    text2 = f1.render("Тяга: "+str(round(thrust,2)), 1, (255,255,255))
     text3 = f2.render("управление: WASD - ракета, ",1,(255,255,255))
     text4 = f2.render("стрелки - камера, скролл - масштабирование, +/- время ",1,(255,255,255))
     text5 = f2.render("Цифры 1-8 - предустановленные длины траектории",1,(255,255,255))
     text6 = f2.render("u - добавить длину,i - убавить длину, o - замкнуть траекторию",1,(255,255,255))
-    screen.blit(text1, (WW*2/100, WH/50))
-    screen.blit(text2, (WW*98/100, WH/50))
+    text7 = f1.render("DeltaV: "+str(round(player.deltaV)),1,(255,255,255))
+    screen.blit(text1, (WW*1/100, WH*2/50))
+    screen.blit(text2, (WW*85/100, WH*3/50))
     screen.blit(text3, (WW/100, WH*46/50))
     screen.blit(text4, (WW/100, WH*47/50))
     screen.blit(text5, (WW/100, WH*48/50))
     screen.blit(text6,(WW/100, WH*49/50))
-
+    screen.blit(text7, (WW*85/100, WH/50))
 
     pg.display.update()
     clock.tick(150)
