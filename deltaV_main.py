@@ -33,6 +33,7 @@ while gameStage==0:
     pg.font.init()
     WH = WINDOW_HEIGHT
     WW = WINDOW_WIDTH
+
     
 
 
@@ -169,7 +170,6 @@ while gameStage==1:
 
     trajectory.Update(200)
 
-    print(player.deltaV)
 
     drawer.draw(cam)
 
@@ -184,15 +184,16 @@ while gameStage==1:
     text4 = f2.render("стрелки - камера, скролл - масштабирование, +/- время ",1,(255,255,255))
     text5 = f2.render("Цифры 1-8 - предустановленные длины траектории",1,(255,255,255))
     text6 = f2.render("u - добавить длину,i - убавить длину, o - замкнуть траекторию",1,(255,255,255))
-    text7 = f1.render("DeltaV: "+str(round(player.deltaV)),1,(255,255,255))
+    text7 = f1.render("DeltaV: "+str(round(player.deltaV))+" m/s",1,(255,255,255))
+    text8 = f1.render(str(round(trajectory.get_reletive_speed())) +" m/s",1,(255,255,255))
     screen.blit(text1, (WW*1/100, WH*2/50))
-    screen.blit(text2, (WW*85/100, WH*3/50))
+    screen.blit(text2, (WW*82/100, WH*3/50))
     screen.blit(text3, (WW/100, WH*46/50))
     screen.blit(text4, (WW/100, WH*47/50))
     screen.blit(text5, (WW/100, WH*48/50))
     screen.blit(text6,(WW/100, WH*49/50))
-    screen.blit(text7, (WW*85/100, WH/50))
-
+    screen.blit(text7, (WW*82/100, WH/50))
+    screen.blit(text8,(WW*87/100, WH*47/50))
     pg.display.update()
     clock.tick(150)
     
