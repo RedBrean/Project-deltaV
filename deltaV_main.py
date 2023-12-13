@@ -34,8 +34,6 @@ while gameStage==0:
     WH = WINDOW_HEIGHT
     WW = WINDOW_WIDTH
 
-    
-
 
 
     time_coefficients = [[1,1], [100,1], [100,5], [100,20], [100,50], [100,100], [100, 200], [100, 500], [200, 500], [500, 1000], [500, 2000], [500, 4000]]
@@ -94,6 +92,7 @@ while gameStage==0:
     trajectory.k_Tsim = 1.5
     trajectory.needAutoOptimization = True
     gameStage = 1
+    trajectory.resolution = 500
 
 
 while gameStage==1: 
@@ -184,7 +183,10 @@ while gameStage==1:
     text4 = f2.render("стрелки - камера, скролл - масштабирование, +/- время ",1,(255,255,255))
     text5 = f2.render("Цифры 1-8 - предустановленные длины траектории",1,(255,255,255))
     text6 = f2.render("u - добавить длину,i - убавить длину, o - замкнуть траекторию",1,(255,255,255))
-    text7 = f1.render("DeltaV: "+str(round(player.deltaV))+" m/s",1,(255,255,255))
+    try:
+        text7 = f1.render("DeltaV: "+str(round(player.deltaV))+" m/s",1,(255,255,255))
+    except:
+        text7 = f1.render("DeltaV не ограничена!",1,(255,255,255))
     text8 = f1.render(str(round(trajectory.get_reletive_speed())) +" m/s",1,(255,255,255))
     screen.blit(text1, (WW*1/100, WH*2/50))
     screen.blit(text2, (WW*82/100, WH*3/50))
