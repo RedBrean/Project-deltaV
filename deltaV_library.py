@@ -128,12 +128,20 @@ class Trajectory(Drawable):
             r = ((self.my_main_object.x - self.my_reletive_object.x)**2 
                  + (self.my_main_object.y - self.my_reletive_object.y)**2)**0.5
             vanted_iterations = self.vanted_Iterations
-            k = self.get_current_a_of_main_object([self.my_reletive_object]) / a
-            dt1 = math.ceil(2*math.pi * r / v / vanted_iterations)
-            dt2 = math.ceil(5 / a)
+            k1 = self.get_current_a_of_main_object([self.my_reletive_object]) / a
+            k2 = 0
+            
+            k3 = 1 - k1
+            try:
+                dt1 = 2*math.pi * r / v / vanted_iterations
+            except:
+                dt1 = 0
+                k1 = 0
+            dt2 = 5 / (a*r)**0.5
+            dt3 = 5 / a
 
             #пока накопление ошибки слишком большое
-            dt = self.k_dt*(dt1*k + dt2*(1-k))
+            dt = self.k_dt*(dt1*k1 + dt2*k2 + dt3*k3)/(k1+k2+k3)
 
             dt  = min(dt, 10**6)
             self.phys_sim.update_by_dt(dt)
@@ -144,7 +152,7 @@ class Trajectory(Drawable):
             self.trajectory_list = copy.copy(self.new_trajectory_list)
             self.Restart_sim()
 
-    def Optimize(self, k_zamknutosti = 0.2, k_dt_override = 1):
+    def Optimize(self, k_zamknutosti = 0.2, k_dt_override = 1.2):
         if (len(self.trajectory_list) > 1):
 
             maxX = self.trajectory_list[0][0]
@@ -178,6 +186,7 @@ class Trajectory(Drawable):
             if stage<2:
                 self.k_dt = math.ceil(self.k_dt*1.2)
         if (self.k_dt > 1000):
+            self.needAutoOptimization = False
             self.k_dt = 1
 
     def Restart_sim(self):
@@ -197,7 +206,7 @@ class Trajectory(Drawable):
         self.point_step = self.vanted_Iterations//self.resolution
 
         if(self.needAutoOptimization):
-            self.Optimize(self.vanted_Iterations, self.k_zamknutosti)
+            self.Optimize(self.k_zamknutosti)
 
         self.custom_coord = False
 
@@ -358,7 +367,7 @@ class Player(GameObject):
     def move(self, dt):
         super().move(dt)
         #FIXME Изменение скорости из-за работающей тяги
-        self.deltaV -= self.thrust*self.a_0*dt
+        self.deltaV -= abs(self.thrust*self.a_0*dt)
         self.vx+=self.thrust*self.a_0*math.cos(self.angle*math.pi/180)
         self.vy-=self.thrust*self.a_0*math.sin(self.angle*math.pi/180)
 
