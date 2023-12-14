@@ -45,6 +45,8 @@ while gameStage==0:
 
     time_coefficient = time_coefficients[time_coefficient_number]
     trajectory_K_dts = [1, 2, 3, 5, 10, 50, 100, 500]
+
+    trajectory_Tsims = [0.01, 0.02, 0.05, 0.1, 0.3, 0.6, 1, 2, 4]
  
     
     objects = read_level_from_file(file_name)
@@ -63,7 +65,9 @@ while gameStage==0:
     if(player == None):
         print("Нет игрока!")
     if (player != None):
-        trajectory = Trajectory(objects, player, objects[0], needAutoOptimization=False)
+        trajectory1 = Trajectory(objects, player, objects[3], needAutoOptimization=False)
+        trajectory2 = Trajectory_old(objects, player, objects[3], needAutoOptimization=True)
+        trajectory = trajectory1
         cam.SetPivot(player)
         if(EARCH_DEFOULT):
             cam.scale *= 20000
@@ -86,21 +90,38 @@ while gameStage==0:
     for cObject in objects:
         rect = pg.rect.Rect((0,0), (30, 30))
         rect.center = (0, 0)
-        button = Button(rect, trajectory.change_reletive_object, cObject, cam, mouse_button=3, host_object=cObject)
-
-        buttons.append(button)
+        button1 = Button(rect, trajectory1.change_reletive_object, cObject, cam, mouse_button=3, host_object=cObject)
+        button2 = Button(rect, trajectory2.change_reletive_object, cObject, cam, mouse_button=3, host_object=cObject)
+        buttons.append(button1)
+        buttons.append(button2)
     
     #настройка траектории
 
-    trajectory.vanted_Iterations = TRAJECTORY_VANTED_ITERATIONS
-    trajectory.k_zamknutosti = TRAJECTORY_K_ZAMKNUTOSTI
-    trajectory.k_Tsim = TRAJECTORY_K_T_SIM
-    trajectory.needAutoOptimization = TRAJECTORY_AUTO_OPTIMIZATION
-    trajectory.resolution = TRAJECTORY_RESOLUTION
+    trajectory1.vanted_Iterations = TRAJECTORY_VANTED_ITERATIONS
+    trajectory1.k_zamknutosti = TRAJECTORY_K_ZAMKNUTOSTI
+    trajectory1.k_Tsim = TRAJECTORY_K_T_SIM
+    trajectory1.needAutoOptimization = TRAJECTORY_AUTO_OPTIMIZATION
+    trajectory1.resolution = TRAJECTORY_RESOLUTION
+    
+    trajectory2.vanted_Iterations = TRAJECTORY_VANTED_ITERATIONS
+    trajectory2.k_zamknutosti = TRAJECTORY_K_ZAMKNUTOSTI
+    trajectory2.k_Tsim = TRAJECTORY_K_T_SIM
+    trajectory2.needAutoOptimization = TRAJECTORY_AUTO_OPTIMIZATION
+    trajectory2.resolution = TRAJECTORY_RESOLUTION
+    trajectory2.color = RED
 
     gameStage = 1
 
+def switch_trajectory():
+    global trajectory, trajectory1, trajectory2, drawer
+    drawer.drawble_objects.remove(trajectory)
+    if(trajectory == trajectory1):
+        trajectory = trajectory2
+    else:
+        trajectory = trajectory1
+    drawer.drawble_objects.append(trajectory)
 
+    trajectory.Restart_sim()
 
 while gameStage==1: 
 
@@ -137,9 +158,11 @@ while gameStage==1:
                 trajectory.switch_optimization()
 
             if event.key == pg.K_1:
-                trajectory.set_k_dt(trajectory_K_dts[0])
+                trajectory1.set_k_dt(trajectory_K_dts[0])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[0])
             if event.key == pg.K_2:
-                trajectory.set_k_dt(trajectory_K_dts[1])
+                trajectory1.set_k_dt(trajectory_K_dts[1])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[0])
             if event.key == pg.K_3:
                 trajectory.set_k_dt(trajectory_K_dts[2])
             if event.key == pg.K_4:
@@ -157,6 +180,10 @@ while gameStage==1:
                 trajectory.multiply_k_dt(1.2)
             if event.key == pg.K_u:
                 trajectory.multiply_k_dt(1/1.2)
+
+            if event.key == pg.K_j:
+                switch_trajectory()
+
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
             try:
