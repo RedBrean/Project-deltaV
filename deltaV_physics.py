@@ -26,7 +26,7 @@ class SpaceObject:
         obj.collisionR = anotherObject.collisionR
 
         return obj
-
+    
     def move_by_gravity_of_spaceobjects_list(self, dt, AnotherSpaceObjects:list):
         """Изменяет скорость космического тела гравитацией других тел за время dt"""
         for spaceObject in AnotherSpaceObjects:
