@@ -124,26 +124,17 @@ class Trajectory(Drawable):
                 y = self.my_main_object.y - self.my_reletive_object.y
                 self.new_trajectory_list.append((x, y))
             a = self.get_current_a_of_main_object(self.my_space_objects)
+            ar = self.get_current_a_of_main_object([self.my_reletive_object])
             v = self.get_reletive_speed()
             r = ((self.my_main_object.x - self.my_reletive_object.x)**2 
                  + (self.my_main_object.y - self.my_reletive_object.y)**2)**0.5
             vanted_iterations = self.vanted_Iterations
-            k1 = self.get_current_a_of_main_object([self.my_reletive_object]) / a
-            k2 = 0
-            
-            k3 = 1 - k1
-            try:
-                dt1 = 2*math.pi * r / v / vanted_iterations
-            except:
-                dt1 = 0
-                k1 = 0
-            dt2 = 5 / (a*r)**0.5
-            dt3 = 5 / a
 
-            #пока накопление ошибки слишком большое
-            dt = self.k_dt*(dt1*k1 + dt2*k2 + dt3*k3)/(k1+k2+k3)
+            dt = v/a * 0.005
 
-            dt  = min(dt, 10**6)
+
+
+            dt  = min(self.k_dt, dt, 10**6)
             self.phys_sim.update_by_dt(dt)
 
             self.tick += 1
