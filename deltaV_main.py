@@ -123,6 +123,18 @@ def switch_trajectory():
 
     trajectory.Restart_sim()
 
+def trajectory_settings_set(index):
+    if(trajectory == trajectory1):
+        trajectory1.set_k_dt(trajectory_K_dts[index])
+    else:
+        trajectory2.set_Tsim_in_years(trajectory_Tsims[index])
+
+
+def trajectory_settings_mult(k):
+    if(trajectory == trajectory1):
+        trajectory1.multiply_k_dt(k)
+    else:
+        trajectory2.multiply_k_dt(k)
 while gameStage==1: 
 
     time_coefficient = time_coefficients[time_coefficient_number]
@@ -134,6 +146,8 @@ while gameStage==1:
     
     buttons.update()
     
+
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameStage="No"
@@ -155,39 +169,28 @@ while gameStage==1:
             if event.key == pg.K_0:
                 time_coefficient_number=0
             if event.key == pg.K_o:
-                trajectory1.switch_optimization()
-
+                trajectory.switch_optimization()
             if event.key == pg.K_1:
-                trajectory1.set_k_dt(trajectory_K_dts[0])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[0])
+                trajectory_settings_set(0)
             if event.key == pg.K_2:
-                trajectory1.set_k_dt(trajectory_K_dts[1])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[1])
+                trajectory_settings_set(1)
             if event.key == pg.K_3:
-                trajectory1.set_k_dt(trajectory_K_dts[2])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[2])
+                trajectory_settings_set(2)
             if event.key == pg.K_4:
-                trajectory1.set_k_dt(trajectory_K_dts[3])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[3])
+                trajectory_settings_set(3)
             if event.key == pg.K_5:
-                trajectory1.set_k_dt(trajectory_K_dts[4])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[4])
+                trajectory_settings_set(4)
             if event.key == pg.K_6:
-                trajectory1.set_k_dt(trajectory_K_dts[5])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[5])
+                trajectory_settings_set(5)
             if event.key == pg.K_7:
-                trajectory1.set_k_dt(trajectory_K_dts[6])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[6])
+                trajectory_settings_set(6)
             if event.key == pg.K_8:
-                trajectory1.set_k_dt(trajectory_K_dts[7])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[7])
+                trajectory_settings_set(7)
 
             if event.key == pg.K_i:
-                trajectory1.multiply_k_dt(1.2)
-                trajectory2.multiply_T_sim(1.2)
+                trajectory_settings_mult(1.2)
             if event.key == pg.K_u:
-                trajectory1.multiply_k_dt(1/1.2)
-                trajectory2.multiply_T_sim(1/1.2)
+                trajectory_settings_mult(1/1.2)
             if event.key == pg.K_j:
                 switch_trajectory()
 
@@ -210,7 +213,7 @@ while gameStage==1:
     except:
         pass
 
-    trajectory.Update(200)
+    trajectory.Update(TRAJECTORY_UPDATES_PER_TICK)
 
 
     drawer.draw(cam)
