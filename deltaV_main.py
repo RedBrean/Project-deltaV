@@ -155,7 +155,7 @@ while gameStage==1:
             if event.key == pg.K_0:
                 time_coefficient_number=0
             if event.key == pg.K_o:
-                trajectory.switch_optimization()
+                trajectory1.switch_optimization()
 
             if event.key == pg.K_1:
                 trajectory1.set_k_dt(trajectory_K_dts[0])
@@ -183,10 +183,11 @@ while gameStage==1:
                 trajectory2.set_Tsim_in_years(trajectory_Tsims[7])
 
             if event.key == pg.K_i:
-                trajectory.multiply_k_dt(1.2)
+                trajectory1.multiply_k_dt(1.2)
+                trajectory2.multiply_T_sim(1.2)
             if event.key == pg.K_u:
-                trajectory.multiply_k_dt(1/1.2)
-
+                trajectory1.multiply_k_dt(1/1.2)
+                trajectory2.multiply_T_sim(1/1.2)
             if event.key == pg.K_j:
                 switch_trajectory()
 
@@ -229,7 +230,7 @@ while gameStage==1:
     text5 = f2.render("Цифры 1-8 - предустановленные длины траектории",1,(255,255,255))
     text9 = f2.render("ЛКМ, ПКМ - привязка камеры/траектории",1,(255,255,255))
 
-    text6 = f2.render("u - добавить длину,i - убавить длину, o - замкнуть траекторию",1,(255,255,255))
+    text6 = f2.render("u - добавить длину,i - убавить длину, o - замкнуть траекторию, j - другой движок траектории",1,(255,255,255))
     
     #вывод остатка топлива
     try:
