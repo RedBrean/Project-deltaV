@@ -44,7 +44,7 @@ while gameStage==0:
     time_coefficient_number = 0
 
     time_coefficient = time_coefficients[time_coefficient_number]
-    trajectory_Tsims = [0.01, 0.02, 0.05, 0.1, 0.3, 0.6, 1, 2, 4]
+    trajectory_K_dts = [1, 2, 3, 5, 10, 50, 100, 500]
  
     
     objects = read_level_from_file(file_name)
@@ -63,14 +63,13 @@ while gameStage==0:
     if(player == None):
         print("Нет игрока!")
     if (player != None):
-        trajectory = Trajectory(objects, player, objects[0], needAutoOptimization=False, k_Tsim=1.1)
+        trajectory = Trajectory(objects, player, objects[0], needAutoOptimization=False)
         cam.SetPivot(player)
         if(EARCH_DEFOULT):
             cam.scale *= 20000
             trajectory.change_reletive_object(objects[3])
-            trajectory.set_Tsim_in_years(0.005)
     else:
-        trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=False, k_Tsim=1.1)
+        trajectory = Trajectory(objects, objects[3], objects[0], needAutoOptimization=False)
 
     drawer.append_object(trajectory)
 
@@ -138,26 +137,26 @@ while gameStage==1:
                 trajectory.switch_optimization()
 
             if event.key == pg.K_1:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[0])
+                trajectory.set_k_dt(trajectory_K_dts[0])
             if event.key == pg.K_2:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[1])
+                trajectory.set_k_dt(trajectory_K_dts[1])
             if event.key == pg.K_3:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[2])
+                trajectory.set_k_dt(trajectory_K_dts[2])
             if event.key == pg.K_4:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[3])
+                trajectory.set_k_dt(trajectory_K_dts[3])
             if event.key == pg.K_5:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[4])
+                trajectory.set_k_dt(trajectory_K_dts[4])
             if event.key == pg.K_6:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[5])
+                trajectory.set_k_dt(trajectory_K_dts[5])
             if event.key == pg.K_7:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[6])
+                trajectory.set_k_dt(trajectory_K_dts[6])
             if event.key == pg.K_8:
-                trajectory.set_Tsim_in_years(trajectory_Tsims[7])
+                trajectory.set_k_dt(trajectory_K_dts[7])
 
             if event.key == pg.K_i:
-                trajectory.multiply_T_sim(1.2)
+                trajectory.multiply_k_dt(1.2)
             if event.key == pg.K_u:
-                trajectory.multiply_T_sim(1/1.2)
+                trajectory.multiply_k_dt(1/1.2)
         elif event.type == pg.KEYUP:
             cam.move_by_key(event)
             try:

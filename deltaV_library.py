@@ -56,8 +56,7 @@ class GameObject(SpaceObject, Drawable):
 
 class Trajectory(Drawable):
     def __init__(self, space_objects : list[SpaceObject], main_object : SpaceObject, reletive_object : SpaceObject, 
-                 resolution = 100, dt = 3000, Tsim = 365*24*3600, needAutoOptimization = False, vanted_Iterations = 6000,
-                 k_zamknutosti = 0.1, k_Tsim = 1.5, k_dt = 1):
+                 resolution = 100, needAutoOptimization = False, vanted_Iterations = 6000, k_dt = 1, k_zamknutosti = 0.1):
         """ 
         аргументы: 
         dt - время шага расчета
@@ -82,21 +81,19 @@ class Trajectory(Drawable):
         self.new_trajectory_list = []
 
         self.resolution = resolution
-        self.dt = dt
-        self.Tsim = Tsim
+
         self.vanted_Iterations = vanted_Iterations
         self.calc_time = 0
 
 
         self.needAutoOptimization = needAutoOptimization
         #дефолтные коэфициенты оптимизации
-        self.k_Tsim = k_Tsim 
+
         self.k_dt = k_dt
         self.vanted_Iterations = 6000
         self.k_zamknutosti = k_zamknutosti
 
         self.Restart_sim() #Возможно оно повторяяет часть конструктора, но так безопаснее
-
 
     @property
     def x(self):
@@ -114,38 +111,40 @@ class Trajectory(Drawable):
 
     @property
     def visualR(self):
+
         try:
             return self.__visualR
             return 0
         except:
             return 0
-    def Update(self, iteretions):
-        #FIXME настройки и логика обновления пока сложны
-        ticks_to_next_point = int(self.step - (self.tick % self.step))
-        while (iteretions > ticks_to_next_point):
-            x = self.my_main_object.x - self.my_reletive_object.x
-            y = self.my_main_object.y - self.my_reletive_object.y
-            self.new_trajectory_list.append((x, y))
-            self.phys_sim.update_by_dt_few_times(self.dt, ticks_to_next_point)
-            self.tick += ticks_to_next_point
-            iteretions -= ticks_to_next_point
+    def Update(self, iterations):
+        for i in range(iterations):
+            if(self.tick%self.point_step == 0):
+                x = self.my_main_object.x - self.my_reletive_object.x
+                y = self.my_main_object.y - self.my_reletive_object.y
+                self.new_trajectory_list.append((x, y))
+            a = self.get_current_a_of_main_object(self.my_space_objects)
+            v = self.get_reletive_speed()
+            r = ((self.my_main_object.x - self.my_reletive_object.x)**2 
+                 + (self.my_main_object.y - self.my_reletive_object.y)**2)**0.5
+            vanted_iterations = self.vanted_Iterations
+            k = self.get_current_a_of_main_object([self.my_reletive_object]) / a
+            dt1 = math.ceil(2*math.pi * r / v / vanted_iterations)
+            dt2 = math.ceil(5 / a)
 
-        self.phys_sim.update_by_dt_few_times(self.dt, iteretions)
-        self.tick += iteretions
+            #пока накопление ошибки слишком большое
+            dt = self.k_dt*(dt1*k + dt2*(1-k))
 
-        if(self.tick > self.simTicks):
+            dt  = min(dt, 10**6)
+            self.phys_sim.update_by_dt(dt)
+
+            self.tick += 1
+
+        if(self.tick > self.vanted_Iterations):
             self.trajectory_list = copy.copy(self.new_trajectory_list)
             self.Restart_sim()
 
-    def Optimize(self, vantedIterations = 6000, k_zamknutosti = 0.1, k_dt = 1, k_Tsim = 1.5):
-        #FIXME Надо сделать более адеватный рассчет времени обращения
-        #dist = ((self.my_main_object.x - self.reletive_object.x)**2 + (self.my_main_object.y - self.reletive_object.y)**2)**0.5
-        #V = ((self.my_main_object.vx - self.reletive_object.vx)**2 + (self.my_main_object.vy - self.reletive_object.vy)**2)**0.5
-        #Tsim = 2*math.pi*dist/V
-        #dt = Tsim//vantedIterations // 1
-        #self.Tsim = Tsim * k_Tsim //1
-        #self.dt = dt * k_dt // 1
-
+    def Optimize(self, k_zamknutosti = 0.2, k_dt_override = 1):
         if (len(self.trajectory_list) > 1):
 
             maxX = self.trajectory_list[0][0]
@@ -173,14 +172,13 @@ class Trajectory(Drawable):
                 if(R > needR/k_zamknutosti/5):
                     stage = 1
                 if(R<needR and stage==1):
-                    self.Tsim = math.ceil(self.Tsim * i / len(self.trajectory_list)) * k_Tsim
+                    self.k_dt = math.ceil(self.k_dt * i / len(self.trajectory_list)) * k_dt_override
                     stage = 2
                     break
             if stage<2:
-                self.Tsim = math.ceil(self.Tsim*1.5)
-        if (self.Tsim > 100*365*24*3600):
-            self.Tsim = 80*365*24*3600
-        self.dt = int(self.Tsim//vantedIterations // 1) * k_dt
+                self.k_dt = math.ceil(self.k_dt*1.2)
+        if (self.k_dt > 1000):
+            self.k_dt = 1
 
     def Restart_sim(self):
         self.new_trajectory_list.clear()
@@ -196,13 +194,10 @@ class Trajectory(Drawable):
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
         self.tick = 0
-        self.dt = math.ceil(self.Tsim//self.vanted_Iterations)
-        self.dt = max(self.dt, 1)
-        self.simTicks = math.ceil(self.Tsim//self.dt)
-        self.step = self.simTicks//self.resolution
+        self.point_step = self.vanted_Iterations//self.resolution
 
         if(self.needAutoOptimization):
-            self.Optimize(self.vanted_Iterations, self.k_zamknutosti, self.k_dt, self.k_Tsim)
+            self.Optimize(self.vanted_Iterations, self.k_zamknutosti)
 
         self.custom_coord = False
 
@@ -287,18 +282,27 @@ class Trajectory(Drawable):
         self.Restart_sim()
         self.trajectory_list.clear()
 
-    def multiply_T_sim(self, k, needAutoOptimization = False):
+    def get_current_a_of_main_object(self, space_objects):
+        main_object = self.my_main_object
+        A = 0
+        for spaceObject in space_objects:
+            if (main_object.x == spaceObject.x and main_object.y == spaceObject.y):
+                continue
+            dA = (gravitational_constant * spaceObject.m) / ((spaceObject.x - main_object.x)**2 + (spaceObject.y - main_object.y)**2)
+            A += dA
+        return A
+
+    def multiply_k_dt(self, k, needAutoOptimization = False):
         self.needAutoOptimization = needAutoOptimization
-        self.Tsim *= k
+        self.k_dt *= k
         self.Restart_sim()
     def switch_optimization(self):
         self.needAutoOptimization = not self.needAutoOptimization
         self.Restart_sim()
-    def set_Tsim_in_years(self, years, needAutoOptimization = False):
+    def set_k_dt(self, k_dt, needAutoOptimization = False):
         self.needAutoOptimization = needAutoOptimization
-        self.Tsim = math.ceil(years*365*24*3600)
+        self.k_dt = math.ceil(k_dt)
         self.Restart_sim()
-
     def get_reletive_speed(self):
         main_object = self.space_objects[self.index_main_object]
         reletive_object = self.space_objects[self.index_reletive_object]
