@@ -287,14 +287,15 @@ class Trajectory(Drawable):
         self.Restart_sim()
         self.trajectory_list.clear()
 
-    def multiply_T_sim(self, k):
+    def multiply_T_sim(self, k, needAutoOptimization = False):
+        self.needAutoOptimization = needAutoOptimization
         self.Tsim *= k
         self.Restart_sim()
     def switch_optimization(self):
         self.needAutoOptimization = not self.needAutoOptimization
         self.Restart_sim()
-    def set_Tsim_in_years(self, years):
-        self.needAutoOptimization = False
+    def set_Tsim_in_years(self, years, needAutoOptimization = False):
+        self.needAutoOptimization = needAutoOptimization
         self.Tsim = math.ceil(years*365*24*3600)
         self.Restart_sim()
 

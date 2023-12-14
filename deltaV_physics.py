@@ -16,6 +16,7 @@ class SpaceObject:
         self.collisionR = collisionR 
 
     def copy(anotherObject):
+        """Создает копию класса SpaceObject другого объекта совместимого класса"""
         obj = SpaceObject()
         obj.x = anotherObject.x
         obj.y = anotherObject.y
@@ -40,6 +41,7 @@ class SpaceObject:
                 #print(f"A:{Alpha}, dv = {dV}")
     
     def move(self, dt):
+        """Двигает за время dt"""
         self.x += self.vx *dt
         self.y += self.vy *dt
 

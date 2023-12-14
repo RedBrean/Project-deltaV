@@ -27,18 +27,22 @@ while gameStage==0:
     deltaV_test.testInit()
     clock = pg.time.Clock() 
     screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-
+    
+    #установка шрифтов. Размер зависит от экрана, числа 36 и 25 подогнанны 
     f1 = pg.font.Font(None, int(round(WINDOW_HEIGHT*36/850)))
     f2 = pg.font.Font(None, int(round(WINDOW_HEIGHT*25/850))) 
     pg.font.init()
+
+
     WH = WINDOW_HEIGHT
     WW = WINDOW_WIDTH
 
 
-
+    #скорости симуляции
+    # 1 число - количество итераций симуляции за тик, 2 число - шаг dt симуляции
     time_coefficients = [[1,1], [100,1], [100,5], [100,20], [100,50], [100,100], [100, 200], [100, 500], [200, 500], [500, 1000], [500, 2000], [500, 4000]]
     time_coefficient_number = 0
-    #1,100, 1000, 2500, 5000,10000, 25000, 50000, 100000, 500000, 1m
+
     time_coefficient = time_coefficients[time_coefficient_number]
     trajectory_Tsims = [0.01, 0.02, 0.05, 0.1, 0.3, 0.6, 1, 2, 4]
  
@@ -71,13 +75,14 @@ while gameStage==0:
     drawer.append_object(trajectory)
 
     buttons = Buttons()
+
+    #добавляем кнопки на планеты для привязки
     for cObject in objects:
         rect = pg.rect.Rect((0,0), (30, 30))
         rect.center = (0, 0)
         button = Button(rect, cam.SetPivot, cObject, cam, host_object=cObject)
 
         buttons.append(button)
-
 
     for cObject in objects:
         rect = pg.rect.Rect((0,0), (30, 30))
@@ -86,13 +91,16 @@ while gameStage==0:
 
         buttons.append(button)
     
+    #настройка траектории
 
-    trajectory.vanted_Iterations = VANTED_ITERATIONS
-    trajectory.k_zamknutosti = 0.2
-    trajectory.k_Tsim = 1.5
-    trajectory.needAutoOptimization = True
+    trajectory.vanted_Iterations = TRAJECTORY_VANTED_ITERATIONS
+    trajectory.k_zamknutosti = TRAJECTORY_K_ZAMKNUTOSTI
+    trajectory.k_Tsim = TRAJECTORY_K_T_SIM
+    trajectory.needAutoOptimization = TRAJECTORY_AUTO_OPTIMIZATION
+    trajectory.resolution = TRAJECTORY_RESOLUTION
+
     gameStage = 1
-    trajectory.resolution = 500
+
 
 
 while gameStage==1: 
@@ -101,6 +109,7 @@ while gameStage==1:
     
     thrust = player.thrust
 
+    #обновялем физическую симуляцию на уставновленной скорости симуляции
     mainPhisMod.update_by_dt_few_times(time_coefficient[1], time_coefficient[0])
     
     buttons.update()
@@ -144,6 +153,7 @@ while gameStage==1:
                 trajectory.set_Tsim_in_years(trajectory_Tsims[6])
             if event.key == pg.K_8:
                 trajectory.set_Tsim_in_years(trajectory_Tsims[7])
+
             if event.key == pg.K_i:
                 trajectory.multiply_T_sim(1.2)
             if event.key == pg.K_u:
@@ -172,24 +182,33 @@ while gameStage==1:
 
     drawer.draw(cam)
 
+    #вывод скорости симуляции в формате без кучи нулей
     if time_coefficient[1]*time_coefficient[0] <1000:
         text1 = f1.render(str(time_coefficient[1]*time_coefficient[0])+"X", 1, (255,255,255))
     elif time_coefficient[1]*time_coefficient[0] <1000000:
         text1 = f1.render(str((time_coefficient[1]*time_coefficient[0])//1000)+"kX", 1, (255,255,255))
     elif time_coefficient[1]*time_coefficient[0] >=1000000:
         text1 = f1.render(str((time_coefficient[1]*time_coefficient[0])//1000000)+"MX", 1, (255,255,255))
-    text2 = f1.render("Тяга: "+str(round(thrust,2)), 1, (255,255,255))
+
+    #вывод управления
+    text2 = f1.render("Тяга: "+str(round(player.thrust,2)), 1, (255,255,255))
     text3 = f2.render("управление: WASD - ракета, ",1,(255,255,255))
     text4 = f2.render("стрелки - камера, скролл - масштабирование, +/- время ",1,(255,255,255))
     text5 = f2.render("Цифры 1-8 - предустановленные длины траектории",1,(255,255,255))
-    text9 = f2.render("ЛКМ, ПКМ - привязка камеры",1,(255,255,255))
+    text9 = f2.render("ЛКМ, ПКМ - привязка камеры/траектории",1,(255,255,255))
 
     text6 = f2.render("u - добавить длину,i - убавить длину, o - замкнуть траекторию",1,(255,255,255))
+    
+    #вывод остатка топлива
     try:
         text7 = f1.render("DeltaV: "+str(round(player.deltaV))+" m/s",1,(255,255,255))
     except:
         text7 = f1.render("DeltaV не ограничена!",1,(255,255,255))
+    
+    #вывод относительной скорости
     text8 = f1.render(str(round(trajectory.get_reletive_speed())) +" m/s",1,(255,255,255))
+
+    #вывод текстов на экран в относительных коорднатах 
     screen.blit(text1, (WW*1/100, WH*2/50))
     screen.blit(text2, (WW*82/100, WH*3/50))
     screen.blit(text3, (WW/100, WH*45/50))
