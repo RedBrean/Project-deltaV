@@ -123,6 +123,7 @@ class Trajectory(Drawable):
                 x = self.my_main_object.x - self.my_reletive_object.x
                 y = self.my_main_object.y - self.my_reletive_object.y
                 self.new_trajectory_list.append((x, y))
+            
             a = self.get_current_a_of_main_object(self.my_space_objects)
             ar = self.get_current_a_of_main_object([self.my_reletive_object])
             v = self.get_reletive_speed()
@@ -130,15 +131,12 @@ class Trajectory(Drawable):
                  + (self.my_main_object.y - self.my_reletive_object.y)**2)**0.5
             vanted_iterations = self.vanted_Iterations
 
-            dt = v/a * 0.005
+            dt = v/ar * 3 / self.vanted_Iterations
 
-
-
-            dt  = min(self.k_dt, dt, 10**6)
+            dt  = min(self.k_dt*dt, 10**6)
             self.phys_sim.update_by_dt(dt)
-
             self.tick += 1
-
+        print(a, ar, v, r, dt)
         if(self.tick > self.vanted_Iterations):
             self.trajectory_list = copy.copy(self.new_trajectory_list)
             self.Restart_sim()
