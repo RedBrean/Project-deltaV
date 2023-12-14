@@ -162,19 +162,25 @@ while gameStage==1:
                 trajectory2.set_Tsim_in_years(trajectory_Tsims[0])
             if event.key == pg.K_2:
                 trajectory1.set_k_dt(trajectory_K_dts[1])
-                trajectory2.set_Tsim_in_years(trajectory_Tsims[0])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[1])
             if event.key == pg.K_3:
-                trajectory.set_k_dt(trajectory_K_dts[2])
+                trajectory1.set_k_dt(trajectory_K_dts[2])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[2])
             if event.key == pg.K_4:
-                trajectory.set_k_dt(trajectory_K_dts[3])
+                trajectory1.set_k_dt(trajectory_K_dts[3])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[3])
             if event.key == pg.K_5:
-                trajectory.set_k_dt(trajectory_K_dts[4])
+                trajectory1.set_k_dt(trajectory_K_dts[4])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[4])
             if event.key == pg.K_6:
-                trajectory.set_k_dt(trajectory_K_dts[5])
+                trajectory1.set_k_dt(trajectory_K_dts[5])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[5])
             if event.key == pg.K_7:
-                trajectory.set_k_dt(trajectory_K_dts[6])
+                trajectory1.set_k_dt(trajectory_K_dts[6])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[6])
             if event.key == pg.K_8:
-                trajectory.set_k_dt(trajectory_K_dts[7])
+                trajectory1.set_k_dt(trajectory_K_dts[7])
+                trajectory2.set_Tsim_in_years(trajectory_Tsims[7])
 
             if event.key == pg.K_i:
                 trajectory.multiply_k_dt(1.2)
