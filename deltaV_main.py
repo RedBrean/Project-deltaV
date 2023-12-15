@@ -2,8 +2,7 @@
  Остальные модули по сути служат библиотекой, в них стараемся не писать ничего что не является функцией или классом"""
 
 import pygame as pg
- 
-import deltaV_test
+
 
 from deltaV_vis import *
 from deltaV_library import*
@@ -24,7 +23,6 @@ gameStage = 0
 while gameStage==0:
     #первоначальная настройка
     pg.init()
-    deltaV_test.testInit()
     clock = pg.time.Clock() 
     screen = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     
