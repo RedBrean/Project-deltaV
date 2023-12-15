@@ -4,7 +4,7 @@ from deltaV_settings import *
 import copy
 
 class Drawable(object):
-    """Рисовабельные предметы"""
+    """Рисовабельные предметы. Нужно переопределить метод GetSurface"""
     def __init__(self, spriteFileName = None, x = None, y = None):
         #можно читать из файла проекта спрайт
         self.haveSprite = False
@@ -21,7 +21,6 @@ class Drawable(object):
 
     def GetSurface(self, camera) -> pg.Surface:
         #Долно скидывать полотно которое нужно вывести на экран
-        #Пока что тут затычка
         width  = 30
         hight = 30
         surf = pg.Surface((width,hight))
@@ -55,9 +54,9 @@ class Drawable(object):
         rect = self.GetRectWihtSurf(surface, camera)
         return surface, rect
     
-    
         
 class Camera():
+    """Класс камеры, которая по сути показывает куда смотрит игрок"""
     def __init__(self,x=0,y=0):
         self.pivotx = 0
         self.pivoty = 0
@@ -156,7 +155,7 @@ class Camera():
             
         
 class ScreenDrawer():
-    """Класс отвечающий за вывод на экран"""
+    """Выводит объекты из списка dreaweble_objects. Добавлять туда желательно методом append_object"""
     def __init__(self,screen : pg.Surface, drawble_objects : list[Drawable]):
         self.screen=screen
         self.drawble_objects=copy.copy(drawble_objects)

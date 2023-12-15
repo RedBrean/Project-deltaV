@@ -12,6 +12,7 @@ from deltaV_vis import pg
 
 
 class GameObject(SpaceObject, Drawable):
+    
     def __init__(self, x: float = 0, y: float = 0, vx: float = 0, vy: float = 0, m: float = 0) -> None:
         SpaceObject.__init__(self, x, y, vx, vy, m)
         self.color = WHITE
@@ -55,6 +56,7 @@ class GameObject(SpaceObject, Drawable):
     
 
 class Trajectory(Drawable):
+    """Класс траектории Update обновляет внутренню симуляцию"""
     def __init__(self, space_objects : list[SpaceObject], main_object : SpaceObject, reletive_object : SpaceObject, 
                  resolution = 100, needAutoOptimization = False, vanted_Iterations = 6000, k_dt = 1, k_zamknutosti = 0.1):
         """ 
@@ -62,8 +64,8 @@ class Trajectory(Drawable):
         dt - время шага расчета
         reolution - количество точек траектории
         Tsim - время симуляции"""
-        self.index_main_object = space_objects.index(main_object)
-        self.index_reletive_object = space_objects.index(reletive_object)
+        self._index_main_object = space_objects.index(main_object)
+        self._index_reletive_object = space_objects.index(reletive_object)
 
         self.space_objects = space_objects
 
@@ -71,14 +73,14 @@ class Trajectory(Drawable):
         for space_object in self.space_objects:
             self.my_space_objects.append(SpaceObject.copy(space_object))
 
-        self.my_main_object = self.my_space_objects[self.index_main_object]
+        self.my_main_object = self.my_space_objects[self._index_main_object]
         self.reletive_object = reletive_object
-        self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
+        self.my_reletive_object = self.my_space_objects[self._index_reletive_object]
 
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
         self.trajectory_list = []
-        self.new_trajectory_list = []
+        self.__new_trajectory_list = []
 
         self.resolution = resolution
 
@@ -118,11 +120,12 @@ class Trajectory(Drawable):
         except:
             return 0
     def Update(self, iterations):
+        """Обновляет внутреннюю симуляцию на несколько итераций"""
         for i in range(iterations):
             if(self.tick%self.point_step == 0):
                 x = self.my_main_object.x - self.my_reletive_object.x
                 y = self.my_main_object.y - self.my_reletive_object.y
-                self.new_trajectory_list.append((x, y))
+                self.__new_trajectory_list.append((x, y))
             
             a = self.get_current_a_of_main_object(self.my_space_objects)
             ar = self.get_current_a_of_main_object([self.my_reletive_object])
@@ -150,7 +153,7 @@ class Trajectory(Drawable):
             self.tick += 1
 
         if(self.tick > self.vanted_Iterations):
-            self.trajectory_list = copy.copy(self.new_trajectory_list)
+            self.trajectory_list = copy.copy(self.__new_trajectory_list)
             self.Restart_sim()
 
     def Optimize(self, k_zamknutosti = 0.2, k_dt_override = 1.2):
@@ -191,16 +194,16 @@ class Trajectory(Drawable):
             self.k_dt = 1
 
     def Restart_sim(self):
-        self.new_trajectory_list.clear()
+        self.__new_trajectory_list.clear()
         self.my_space_objects = []
         for space_object in self.space_objects:
             self.my_space_objects.append(SpaceObject.copy(space_object))
 
-        self.my_main_object = self.my_space_objects[self.index_main_object]
+        self.my_main_object = self.my_space_objects[self._index_main_object]
         if isinstance(self.my_main_object, Player):
             self.my_main_object.thrust = 0
             #FIXME Костыль
-        self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
+        self.my_reletive_object = self.my_space_objects[self._index_reletive_object]
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
         self.tick = 0
@@ -285,13 +288,13 @@ class Trajectory(Drawable):
         return surface
 
     def change_main_object(self, new_main_object):
-        self.index_main_object = self.space_objects.index(new_main_object)
+        self._index_main_object = self.space_objects.index(new_main_object)
         self.Restart_sim()
         self.trajectory_list.clear()
 
     def change_reletive_object(self, new_rel_object):
         self.reletive_object = new_rel_object
-        self.index_reletive_object = self.space_objects.index(new_rel_object)
+        self._index_reletive_object = self.space_objects.index(new_rel_object)
         self.Restart_sim()
         self.trajectory_list.clear()
 
@@ -317,13 +320,14 @@ class Trajectory(Drawable):
         self.k_dt = math.ceil(k_dt)
         self.Restart_sim()
     def get_reletive_speed(self):
-        main_object = self.space_objects[self.index_main_object]
-        reletive_object = self.space_objects[self.index_reletive_object]
+        main_object = self.space_objects[self._index_main_object]
+        reletive_object = self.space_objects[self._index_reletive_object]
 
         return ((main_object.vx - reletive_object.vx)**2 + (main_object.vy - reletive_object.vy)**2)**0.5
     
 
 class Trajectory_old(Trajectory):
+    """Старый рассчет  траектории. Точность постоянна"""
     def __init__(self, space_objects : list[SpaceObject], main_object : SpaceObject, reletive_object : SpaceObject, 
                  resolution = 500, dt = 3, Tsim = 10*3600, needAutoOptimization = False, vanted_Iterations = 6000,
                  k_zamknutosti = 0.1, k_Tsim = 1.5, k_dt = 1):
@@ -332,23 +336,25 @@ class Trajectory_old(Trajectory):
         dt - время шага расчета
         reolution - количество точек траектории
         Tsim - время симуляции"""
-        self.index_main_object = space_objects.index(main_object)
-        self.index_reletive_object = space_objects.index(reletive_object)
+        self._index_main_object = space_objects.index(main_object)
+        self._index_reletive_object = space_objects.index(reletive_object)
 
         self.space_objects = space_objects
+        """Космические объекты из реальлного мира"""
 
         self.my_space_objects = []
+        """Космические объекты внутри симуляции траектории"""
         for space_object in self.space_objects:
             self.my_space_objects.append(SpaceObject.copy(space_object))
 
-        self.my_main_object = self.my_space_objects[self.index_main_object]
+        self.my_main_object = self.my_space_objects[self._index_main_object]
         self.reletive_object = reletive_object
-        self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
+        self.my_reletive_object = self.my_space_objects[self._index_reletive_object]
 
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
         self.trajectory_list = []
-        self.new_trajectory_list = []
+        self.__new_trajectory_list = []
 
         self.resolution = resolution
         self.dt = dt
@@ -372,7 +378,7 @@ class Trajectory_old(Trajectory):
         while (iteretions > ticks_to_next_point):
             x = self.my_main_object.x - self.my_reletive_object.x
             y = self.my_main_object.y - self.my_reletive_object.y
-            self.new_trajectory_list.append((x, y))
+            self.__new_trajectory_list.append((x, y))
             self.phys_sim.update_by_dt_few_times(self.dt, ticks_to_next_point)
             self.tick += ticks_to_next_point
             iteretions -= ticks_to_next_point
@@ -381,7 +387,7 @@ class Trajectory_old(Trajectory):
         self.tick += iteretions
 
         if(self.tick > self.simTicks):
-            self.trajectory_list = copy.copy(self.new_trajectory_list)
+            self.trajectory_list = copy.copy(self.__new_trajectory_list)
             self.Restart_sim()
 
     def Optimize(self, vantedIterations = 6000, k_zamknutosti = 0.1, k_dt = 1, k_Tsim = 1.5):
@@ -430,16 +436,16 @@ class Trajectory_old(Trajectory):
         self.dt = int(self.Tsim//vantedIterations // 1) * k_dt
 
     def Restart_sim(self):
-        self.new_trajectory_list.clear()
+        self.__new_trajectory_list.clear()
         self.my_space_objects = []
         for space_object in self.space_objects:
             self.my_space_objects.append(SpaceObject.copy(space_object))
 
-        self.my_main_object = self.my_space_objects[self.index_main_object]
+        self.my_main_object = self.my_space_objects[self._index_main_object]
         if isinstance(self.my_main_object, Player):
             self.my_main_object.thrust = 0
             #FIXME Костыль
-        self.my_reletive_object = self.my_space_objects[self.index_reletive_object]
+        self.my_reletive_object = self.my_space_objects[self._index_reletive_object]
         self.phys_sim = PhysicalModulation(self.my_space_objects, False)
 
         self.tick = 0
