@@ -152,8 +152,7 @@ class Camera():
         if event.type == pg.MOUSEWHEEL:
             self.scale*=(1.1**event.y)
 
-            
-        
+                  
 class ScreenDrawer():
     """Выводит объекты из списка dreaweble_objects. Добавлять туда желательно методом append_object"""
     def __init__(self,screen : pg.Surface, drawble_objects : list[Drawable]):
