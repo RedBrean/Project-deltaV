@@ -12,7 +12,7 @@ TRAJECTORY_AUTO_OPTIMIZATION = True
 
 EARCH_DEFOULT =  True
 
-file_name = "solar_system.txt"
+file_name = "3bodies.txt"
 
 RED = 0xFF0000
 BLUE = 0x0000FF

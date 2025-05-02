@@ -143,8 +143,15 @@ class Trajectory(Drawable):
             except:
                 dt1 = 0
                 k1 = 0
-            dt2 = 5 / (a*r)**0.5
-            dt3 = 5 / a
+            if(a!=0 and r!=0):
+                dt2 = 5 / (a*r)**0.5
+                dt3 = 5 / a
+            else:
+                k2 = 0
+                k3 = 0
+                dt2 = 0
+                dt3 = 0
+                k1 = 1
 
             dt = self.k_dt*(dt1*k1 + dt2*k2 + dt3*k3)/(k1+k2+k3)
 

@@ -248,8 +248,7 @@ while gameStage == 1:
 
     # вывод остатка топлива
     try:
-        text7 = f1.render("DeltaV: "+str(round(player.deltaV)
-                                         )+" m/s", 1, (255, 255, 255))
+        text7 = f1.render("DeltaV: "+str(round(player.deltaV))+" m/s", 1, (255, 255, 255))
     except:
         text7 = f1.render("DeltaV не ограничена!", 1, (255, 255, 255))
 
@@ -257,6 +256,23 @@ while gameStage == 1:
     text8 = f1.render(
         str(round(trajectory.get_reletive_speed())) + " m/s", 1, (255, 255, 255))
 
+    # Convert time from seconds to years, months, days, hours, minutes, and seconds
+    total_seconds = mainPhisMod.time
+    years = total_seconds // (365 * 24 * 3600)
+    total_seconds %= (365 * 24 * 3600)
+    months = total_seconds // (30 * 24 * 3600)
+    total_seconds %= (30 * 24 * 3600)
+    days = total_seconds // (24 * 3600)
+    total_seconds %= (24 * 3600)
+    hours = total_seconds // 3600
+    total_seconds %= 3600
+    minutes = total_seconds // 60
+    seconds = total_seconds % 60
+
+    # Format the time string
+    time_string = f"Time: {int(years)}y {int(months)}m {int(days)}d {int(hours)}h {int(minutes)}m {int(seconds)}s"
+    text9 = f1.render(time_string, 1, (255, 255, 255))
+    
     # вывод текстов на экран в относительных коорднатах
     screen.blit(text1, (WW*1/100, WH*2/50))
     screen.blit(text2, (WW*82/100, WH*3/50))
@@ -264,9 +280,9 @@ while gameStage == 1:
     screen.blit(text4, (WW/100, WH*46/50))
     screen.blit(text5, (WW/100, WH*47/50))
     screen.blit(text6, (WW/100, WH*48/50))
-    screen.blit(text9, (WW/100, WH*49/50))
     screen.blit(text7, (WW*82/100, WH/50))
     screen.blit(text8, (WW*87/100, WH*47/50))
+    screen.blit(text9, (WW*50/100, WH*4/50))
     pg.display.update()
     clock.tick(150)
 

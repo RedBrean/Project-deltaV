@@ -60,19 +60,22 @@ class SpaceObject:
         self.collisionR = float(parametrs[5])
         print(f"Result = {self}")
 
-class PhysicalModulation():    
+class PhysicalModulation():   
+
     """Умеет двигать объекты по физике"""
     def __init__(self, space_objects: list[SpaceObject], copy_objects : bool = False):
         if not copy_objects:
             self.space_objects = space_objects
         else:
             self.space_objects = [SpaceObject.copy(cObject) for cObject in space_objects]
+        self.time = 0
         
     def update_by_dt(self, dt):
         """Двигает все за время dt"""
         for space_object in self.space_objects:
             space_object.move_by_gravity_of_spaceobjects_list(dt, self.space_objects)
             space_object.move(dt)
+            self.time += dt
 
     def update_by_dt_few_times(self, dt, n : int):
         for _ in range(n):

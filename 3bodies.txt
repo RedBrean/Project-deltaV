@@ -1,0 +1,10 @@
+# Солнечная система
+game_object; 0; 0; -12917.043; -22372.975; 1E30; 6.957E8; color white; sprite sun.png
+
+# Земля
+game_object; 50E9; -86.60254078E9; 25834.086; 0; 1E30; 6.371e6; color green; sprite earth.png
+
+# Сатурн
+game_object; 100E9; 0; -12917.043; 22372.975; 1E30; 5.8232e7; color yellow; sprite saturn.png
+
+player; 50E9; -43.30254078E9; 0; 0; 0; 6.371e6; deltaV 3E8; sprite rocket.png; sprite_no_thrust rocket_no_thrust.png
