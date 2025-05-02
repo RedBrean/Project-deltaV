@@ -274,15 +274,26 @@ while gameStage == 1:
     text9 = f1.render(time_string, 1, (255, 255, 255))
     
     # вывод текстов на экран в относительных коорднатах
-    screen.blit(text1, (WW*1/100, WH*2/50))
-    screen.blit(text2, (WW*82/100, WH*3/50))
+    # Display simulation speed
+    screen.blit(text1, (WW*1/100, WH*2/50)) 
+
+    # Display thrust value
+    screen.blit(text2, (WW*75/100, WH*3/50))
+
+    # Display control instructions
     screen.blit(text3, (WW/100, WH*45/50))
     screen.blit(text4, (WW/100, WH*46/50))
     screen.blit(text5, (WW/100, WH*47/50))
     screen.blit(text6, (WW/100, WH*48/50))
-    screen.blit(text7, (WW*82/100, WH/50))
+
+    # Display remaining DeltaV
+    screen.blit(text7, (WW*75/100, WH/50))
+
+    # Display relative speed
     screen.blit(text8, (WW*87/100, WH*47/50))
-    screen.blit(text9, (WW*50/100, WH*4/50))
+
+    # Display elapsed simulation time
+    screen.blit(text9, (WW*35/100, WH*1/50))
     pg.display.update()
     clock.tick(150)
 
